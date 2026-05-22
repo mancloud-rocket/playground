@@ -1,0 +1,2575 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1920,initial-scale=1" />
+  <title>Rocketbot Sales Deck v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #BC0017;
+      --red-deep: #7D0010;
+      --red-hot: #E0001C;
+      --red-shadow: #4A000A;
+      --red-tint: rgba(188, 0, 23, 0.045);
+      --ink: #101418;
+      --ink-soft: #1F262E;
+      --ink-card: #161C24;
+      --ink-glass: rgba(22, 28, 36, 0.86);
+      --paper: #F7F4EF;
+      --paper-soft: #EDE7DD;
+      --paper-line: #D7CFC2;
+      --paper-edge: #C8BFB0;
+      --white: #FFFFFF;
+      --muted: #6B7280;
+      --muted-strong: #3F4651;
+      --amber: #C58B2A;
+      --green: #10B981;
+      --green-dim: #047857;
+      --stage-bg: #060709;
+      --glitch-blue: #0DA1A8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--stage-bg);
+      font-family: Montserrat, sans-serif;
+      color: var(--ink);
+    }
+
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      transform-origin: center center;
+      box-shadow: 0 70px 140px rgba(0,0,0,.55);
+      background: var(--paper);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      padding: 78px 120px 96px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .slide.active {
+      display: flex;
+      animation: slideIn .55s cubic-bezier(.2,.65,.25,1) forwards;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Grain noise overlay */
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: .08;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+    }
+
+    .slide.dark::before { mix-blend-mode: screen; opacity: .06; }
+
+    /* Subtle grid */
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(18,24,32,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18,24,32,.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(circle at center, black, transparent 82%);
+    }
+
+    .theme-red {
+      background:
+        radial-gradient(900px 600px at 12% 10%, var(--red-hot) 0%, transparent 60%),
+        radial-gradient(1100px 700px at 95% 110%, #5a000c 0%, transparent 60%),
+        linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+      color: var(--white);
+    }
+    .theme-red.dark { }
+    .theme-red::after { opacity: .15; background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); }
+
+    .theme-ink {
+      background:
+        linear-gradient(125deg, rgba(188,0,23,.18), transparent 38%),
+        radial-gradient(1000px 600px at 88% 8%, rgba(188,0,23,.22), transparent 56%),
+        radial-gradient(800px 500px at 5% 100%, rgba(13,161,168,.06), transparent 56%),
+        #0E1318;
+      color: var(--white);
+    }
+    .theme-ink.dark::after { opacity: .14; }
+
+    .theme-paper {
+      background:
+        radial-gradient(800px 500px at 0% 0%, rgba(188,0,23,.06), transparent 56%),
+        radial-gradient(900px 520px at 100% 100%, rgba(38,50,56,.06), transparent 62%),
+        var(--paper);
+      color: var(--ink);
+    }
+
+    .theme-paper-alt {
+      background: linear-gradient(180deg, var(--paper-soft) 0%, #E5DFD3 100%);
+      color: var(--ink);
+    }
+
+    .slide > * { position: relative; z-index: 2; }
+
+    /* === CHROME === */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-shrink: 0;
+    }
+
+    .logo-stamp {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-stamp .mark {
+      width: 22px;
+      height: 22px;
+      background: var(--red);
+      clip-path: polygon(0 0, 100% 0, 100% 65%, 60% 100%, 0 100%);
+    }
+
+    .theme-red .logo-stamp .mark,
+    .theme-ink .logo-stamp .mark { background: var(--white); }
+
+    .logo-stamp .word {
+      font-family: Montserrat, sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -.012em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 52px;
+      height: 2px;
+      background: currentColor;
+      opacity: .6;
+    }
+
+    .theme-paper .eyebrow,
+    .theme-paper-alt .eyebrow { color: var(--red); }
+
+    .theme-red .eyebrow,
+    .theme-ink .eyebrow { color: rgba(255,255,255,.8); }
+
+    .ruler {
+      display: block;
+      width: 78px;
+      height: 4px;
+      background: var(--red);
+      margin: 22px 0;
+    }
+    .ruler.white { background: var(--white); }
+    .ruler.tall { height: 6px; width: 96px; }
+
+    .footer-brand {
+      position: absolute;
+      left: 120px;
+      bottom: 38px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Montserrat, sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .58;
+    }
+
+    .footer-brand .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .theme-red .footer-brand .dot,
+    .theme-ink .footer-brand .dot { background: var(--white); }
+
+    .counter {
+      position: absolute;
+      right: 120px;
+      bottom: 38px;
+      z-index: 3;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: .26em;
+      opacity: .55;
+    }
+
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: rgba(0,0,0,.1);
+      z-index: 4;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--red);
+      transition: width .45s ease;
+    }
+    .theme-red .progress-fill,
+    .theme-ink .progress-fill { background: var(--white); }
+
+    /* === TYPE === */
+    .display-hero {
+      font-family: Mulish, sans-serif;
+      font-weight: 900;
+      font-size: 156px;
+      line-height: .9;
+      letter-spacing: -.045em;
+    }
+    .display-section {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 96px;
+      line-height: .96;
+      letter-spacing: -.03em;
+    }
+    .display-section.xl { font-size: 124px; line-height: .92; }
+    .display-section.sm { font-size: 72px; line-height: 1.02; }
+
+    .h2 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 1.02;
+      letter-spacing: -.022em;
+    }
+
+    .lead {
+      font-family: Mulish, sans-serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 32px;
+      line-height: 1.36;
+      max-width: 1180px;
+      opacity: .9;
+    }
+
+    .body {
+      font-family: Montserrat, sans-serif;
+      font-size: 21px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+    .theme-ink .body, .theme-red .body { color: rgba(255,255,255,.84); }
+
+    .body ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .body li {
+      padding-left: 24px;
+      position: relative;
+    }
+    .body li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 12px;
+      width: 12px; height: 2px;
+      background: var(--red);
+    }
+    .theme-ink .body li::before, .theme-red .body li::before { background: var(--white); }
+
+    em {
+      font-family: Mulish, sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .theme-ink em, .theme-red em {
+      color: var(--white);
+      text-decoration: underline;
+      text-decoration-thickness: 5px;
+      text-underline-offset: 8px;
+      text-decoration-color: rgba(255,255,255,.6);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    /* === ALPHA STAMP === */
+    .alpha-stamp {
+      position: absolute;
+      right: 92px;
+      top: 76px;
+      z-index: 5;
+      border: 3px solid var(--white);
+      padding: 12px 22px 14px;
+      transform: rotate(-6deg);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: .42em;
+      color: var(--white);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    }
+    .alpha-stamp small {
+      display: block;
+      font-size: 9px;
+      letter-spacing: .3em;
+      opacity: .75;
+      margin-top: 4px;
+    }
+
+    .alpha-stamp.dark {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(188,0,23,.04);
+    }
+
+    /* === TAGS === */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid currentColor;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+    }
+    .tag .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .tag.solid {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+
+    /* === WATERMARK === */
+    .watermark {
+      position: absolute;
+      font-family: Mulish, sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 680px;
+      line-height: .74;
+      letter-spacing: -.07em;
+      opacity: .07;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+    .theme-red .watermark, .theme-ink .watermark { color: var(--white); opacity: .055; }
+
+    /* === GRIDS === */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .grid-2-3 { display: grid; grid-template-columns: 2fr 3fr; gap: 56px; }
+    .grid-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; }
+
+    /* === CARDS === */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--paper-line);
+      padding: 26px 28px;
+      box-shadow: 0 22px 52px rgba(18,24,32,.06);
+      position: relative;
+    }
+    .card.flame { border-top: 4px solid var(--red); }
+    .card.accent { border: 2px solid var(--red); }
+    .card.danger { border: 2px solid var(--red); box-shadow: 10px 10px 0 rgba(188,0,23,.12); }
+    .card.tight { padding: 20px 22px; }
+    .card.outline { background: transparent; border: 1.5px solid var(--paper-line); box-shadow: none; }
+    .card.dark { background: var(--ink-card); border-color: rgba(255,255,255,.12); color: var(--white); }
+
+    .theme-ink .card.glass, .theme-red .card.glass {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(8px);
+      color: var(--white);
+      box-shadow: none;
+    }
+
+    .card .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: .22em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .theme-ink .card .num, .card.dark .num { color: rgba(255,255,255,.7); }
+
+    .card h4 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 1.14;
+      letter-spacing: -.01em;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-family: Montserrat, sans-serif;
+      font-size: 17px;
+      line-height: 1.52;
+      color: var(--ink-soft);
+    }
+    .card.dark p, .theme-ink .card p, .theme-red .card.glass p { color: rgba(255,255,255,.78); }
+
+    /* === SOURCE STRIP === */
+    .source-strip {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--paper-line);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .theme-ink .source-strip {
+      border-color: rgba(255,255,255,.14);
+      color: rgba(255,255,255,.5);
+    }
+
+    /* === ALPHA STRIPED TAPE === */
+    .tape {
+      position: absolute;
+      height: 36px;
+      background: repeating-linear-gradient(
+        135deg,
+        var(--red) 0px, var(--red) 18px,
+        #2a0006 18px, #2a0006 36px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      z-index: 4;
+    }
+
+    /* ================================================
+       MOCKUP: AUTOPILOT UI PANEL
+       ================================================ */
+    .ui-mock {
+      background: #0E1318;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 60px 140px rgba(0,0,0,.55),
+        0 0 0 1px rgba(255,255,255,.04) inset;
+      overflow: hidden;
+      color: #E8ECF0;
+      font-family: Montserrat, sans-serif;
+      position: relative;
+    }
+
+    .ui-titlebar {
+      height: 38px;
+      background: linear-gradient(180deg, #1A2028, #11161C);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+    .ui-titlebar .dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+    }
+    .ui-titlebar .d1 { background: #FF5F57; }
+    .ui-titlebar .d2 { background: #FEBC2E; }
+    .ui-titlebar .d3 { background: #28C840; }
+    .ui-titlebar .url {
+      margin-left: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,.42);
+      letter-spacing: .04em;
+    }
+    .ui-titlebar .badge-running {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #57E48F;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .ui-titlebar .badge-running::before {
+      content: "";
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #28C840;
+      box-shadow: 0 0 0 4px rgba(40,200,64,.18);
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 70%, 100% { opacity: 1; }
+      80% { opacity: .35; }
+    }
+
+    .ui-body {
+      display: grid;
+      grid-template-columns: 280px 1fr 360px;
+      height: calc(100% - 38px);
+    }
+
+    .ui-sidebar {
+      background: #0A0E12;
+      border-right: 1px solid rgba(255,255,255,.05);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ui-sidebar .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .26em;
+      color: rgba(255,255,255,.32);
+      text-transform: uppercase;
+      padding: 8px 10px 6px;
+    }
+    .ui-sidebar .item {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ui-sidebar .item .pip {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.32);
+    }
+    .ui-sidebar .item.active {
+      background: rgba(188,0,23,.18);
+      color: #fff;
+    }
+    .ui-sidebar .item.active .pip { background: var(--red-hot); box-shadow: 0 0 0 4px rgba(188,0,23,.22); }
+    .ui-sidebar .item.done .pip { background: #28C840; }
+
+    .ui-main {
+      padding: 22px 26px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .ui-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .28em;
+      color: var(--red-hot);
+      text-transform: uppercase;
+    }
+    .ui-h1 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: -.015em;
+      color: #fff;
+    }
+    .ui-h1 em { color: var(--red-hot); text-decoration: none; }
+
+    .ui-input {
+      background: #131A22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,.84);
+      line-height: 1.6;
+      min-height: 96px;
+    }
+    .ui-input .caret {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: var(--red-hot);
+      margin-left: 2px;
+      vertical-align: -2px;
+      animation: caret 1.1s steps(1) infinite;
+    }
+    @keyframes caret {
+      50% { opacity: 0; }
+    }
+
+    .ui-controls {
+      display: flex;
+      gap: 10px;
+    }
+    .ui-btn {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.76);
+      background: #131A22;
+    }
+    .ui-btn.primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .ui-plan {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ui-plan .head {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .26em;
+      color: rgba(255,255,255,.42);
+      text-transform: uppercase;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .ui-step {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      padding: 8px 6px;
+      align-items: center;
+      font-size: 12px;
+    }
+    .ui-step .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.46);
+      letter-spacing: .12em;
+    }
+    .ui-step .label { color: rgba(255,255,255,.82); }
+    .ui-step .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+    .ui-step.done .status { background: rgba(16,185,129,.12); color: #57E48F; }
+    .ui-step.active { background: rgba(188,0,23,.08); border-left: 2px solid var(--red); }
+    .ui-step.active .status { background: rgba(188,0,23,.16); color: #FF9CA5; }
+    .ui-step.pending .status { color: rgba(255,255,255,.34); }
+
+    .ui-telemetry {
+      background: #0A0E12;
+      border-left: 1px solid rgba(255,255,255,.05);
+      padding: 16px 18px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.78);
+      position: relative;
+    }
+    .ui-telemetry h5 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .tel-line {
+      display: grid;
+      grid-template-columns: 56px 64px 1fr;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.04);
+    }
+    .tel-line .t { color: rgba(255,255,255,.34); }
+    .tel-line .k {
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 9px;
+      color: rgba(255,255,255,.5);
+      padding-top: 2px;
+    }
+    .tel-line.ok .k { color: #57E48F; }
+    .tel-line.warn .k { color: var(--amber); }
+    .tel-line.err .k { color: #FF8896; }
+    .tel-line .v { color: rgba(255,255,255,.86); word-break: break-all; }
+    .tel-line.err .v strong { color: #FFB0BC; }
+
+    /* ================================================
+       MOCKUP: PORTAL FRAGIL (BROWSER)
+       ================================================ */
+    .browser-mock {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid var(--paper-line);
+      box-shadow: 0 50px 120px rgba(18,24,32,.18);
+      overflow: hidden;
+      color: var(--ink);
+      font-family: Montserrat, sans-serif;
+      position: relative;
+    }
+    .browser-mock .bar {
+      height: 36px;
+      background: #ECEAE3;
+      border-bottom: 1px solid var(--paper-line);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+    }
+    .browser-mock .bar .d {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #C8C2B5;
+    }
+    .browser-mock .bar .url {
+      margin-left: 12px;
+      flex: 1;
+      background: #fff;
+      border-radius: 4px;
+      height: 22px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted-strong);
+    }
+    .browser-mock .content {
+      padding: 26px 30px;
+      position: relative;
+      min-height: 280px;
+    }
+
+    .portal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--paper-line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+    .portal-head h6 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .portal-head .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 14px;
+      padding: 8px 0;
+      align-items: center;
+    }
+    .form-row label {
+      font-size: 13px;
+      color: var(--muted-strong);
+      font-weight: 500;
+    }
+    .form-row input {
+      pointer-events: none;
+      border: 1px solid var(--paper-line);
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink);
+      background: #FAF8F4;
+    }
+    .form-row.broken input { border-color: var(--red); background: #FDEFEF; }
+
+    .popup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(16,20,24,.45);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .popup-card {
+      background: #fff;
+      border: 2px solid var(--red);
+      box-shadow: 12px 12px 0 rgba(188,0,23,.18);
+      padding: 20px 24px;
+      max-width: 340px;
+    }
+    .popup-card h7 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--red);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .popup-card p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .popup-card .btn {
+      background: var(--red);
+      color: #fff;
+      padding: 7px 14px;
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .annot {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--red);
+      letter-spacing: .04em;
+      font-weight: 500;
+      max-width: 220px;
+      line-height: 1.45;
+    }
+    .annot::before {
+      content: "";
+      position: absolute;
+      background: var(--red);
+    }
+
+    /* ================================================
+       MOCKUP: HITL VALIDATION STATION
+       ================================================ */
+    .hitl-mock {
+      background: var(--paper);
+      border: 1px solid var(--paper-line);
+      border-radius: 12px;
+      box-shadow: 0 40px 100px rgba(18,24,32,.14);
+      overflow: hidden;
+    }
+    .hitl-mock .hd {
+      background: var(--ink);
+      color: #fff;
+      padding: 16px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hitl-mock .hd h6 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -.01em;
+    }
+    .hitl-mock .hd .tag-mini {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--red-hot);
+    }
+    .hitl-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .hitl-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      font-size: 13px;
+      align-items: start;
+    }
+    .hitl-row .k {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted-strong);
+      padding-top: 3px;
+    }
+    .hitl-row .v {
+      font-family: Montserrat, sans-serif;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .hitl-row .v.code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #F1ECE3;
+      padding: 4px 8px;
+      display: inline-block;
+    }
+    .hitl-divider {
+      height: 1px;
+      background: var(--paper-line);
+      margin: 4px 0;
+    }
+    .hitl-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .hitl-btn {
+      padding: 10px 18px;
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      border: 1.5px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+    }
+    .hitl-btn.primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+    .hitl-btn.ghost { border-color: var(--paper-edge); color: var(--muted-strong); }
+
+    /* ================================================
+       AGENDA RAIL
+       ================================================ */
+    .agenda-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .agenda-item {
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      gap: 32px;
+      align-items: center;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--paper-line);
+    }
+    .agenda-item .n {
+      font-family: Mulish, sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 64px;
+      color: var(--red);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+    .agenda-item h3 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      line-height: 1.04;
+      letter-spacing: -.015em;
+    }
+    .agenda-item p {
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      color: var(--muted-strong);
+      margin-top: 4px;
+      max-width: 720px;
+    }
+    .agenda-item .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ================================================
+       STATS
+       ================================================ */
+    .stat-mega {
+      font-family: Mulish, sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 168px;
+      line-height: .88;
+      letter-spacing: -.05em;
+      color: var(--red);
+    }
+    .theme-ink .stat-mega { color: var(--white); }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--paper-line);
+      border-bottom: 1px solid var(--paper-line);
+      margin-top: 32px;
+    }
+    .stat-row .cell {
+      padding: 26px 22px;
+      border-right: 1px solid var(--paper-line);
+    }
+    .stat-row .cell:last-child { border-right: none; }
+    .stat-row .v {
+      font-family: Mulish, sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 72px;
+      line-height: 1;
+      letter-spacing: -.03em;
+      color: var(--red);
+    }
+    .stat-row .lbl {
+      font-family: Montserrat, sans-serif;
+      font-size: 14px;
+      line-height: 1.42;
+      color: var(--ink-soft);
+      margin-top: 10px;
+    }
+    .stat-row .src {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .theme-ink .stat-row { border-color: rgba(255,255,255,.14); }
+    .theme-ink .stat-row .cell { border-color: rgba(255,255,255,.14); }
+    .theme-ink .stat-row .v { color: #fff; }
+    .theme-ink .stat-row .lbl { color: rgba(255,255,255,.78); }
+    .theme-ink .stat-row .src { color: rgba(255,255,255,.42); }
+
+    /* ================================================
+       BAR COMPARE
+       ================================================ */
+    .bar-compare {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-top: 18px;
+    }
+    .bar-row .lbl-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: Montserrat, sans-serif;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: rgba(255,255,255,.78);
+    }
+    .bar-row .lbl-row strong {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-style: italic;
+      color: #fff;
+    }
+    .bar-row .track {
+      height: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      position: relative;
+    }
+    .bar-row .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--red-hot), var(--red));
+    }
+    .bar-row .fill.minor {
+      background: rgba(255,255,255,.28);
+    }
+
+    /* ================================================
+       FLOW PIPES (slide 9)
+       ================================================ */
+    .flow-pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .flow-card {
+      background: #fff;
+      border: 1px solid var(--paper-line);
+      padding: 18px 16px;
+      position: relative;
+      min-height: 240px;
+    }
+    .flow-card.active { border: 2px solid var(--red); box-shadow: 8px 8px 0 rgba(188,0,23,.08); }
+    .flow-card .stage-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .22em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .flow-card h5 {
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      margin: 10px 0 8px;
+      line-height: 1.18;
+    }
+    .flow-card p {
+      font-family: Montserrat, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+    .flow-card .icon {
+      width: 36px; height: 36px;
+      background: var(--red);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    .flow-card .arrow {
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Mulish, sans-serif;
+      font-weight: 800;
+      color: var(--red);
+      z-index: 3;
+    }
+    .flow-card:last-child .arrow { display: none; }
+
+    /* ================================================
+       REVEAL ANIMATIONS
+       ================================================ */
+    .reveal { animation: reveal .55s cubic-bezier(.2,.65,.25,1) both; }
+    .reveal-1 { animation-delay: .05s; }
+    .reveal-2 { animation-delay: .14s; }
+    .reveal-3 { animation-delay: .24s; }
+    .reveal-4 { animation-delay: .34s; }
+    .reveal-5 { animation-delay: .44s; }
+    .reveal-6 { animation-delay: .54s; }
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .help {
+      position: fixed;
+      left: 20px; bottom: 14px;
+      z-index: 1000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.32);
+    }
+
+    /* === COVER (SLIDE 1) custom === */
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 60px;
+      flex: 1;
+      align-items: center;
+    }
+    .cover-title-block {
+      position: relative;
+    }
+    .cover-title-block .display-hero {
+      mix-blend-mode: normal;
+    }
+    .cover-meta-line {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+    }
+    .cover-meta-line span.dot {
+      width: 5px; height: 5px;
+      background: var(--white);
+      border-radius: 50%;
+    }
+    .cover-mock-frame {
+      position: relative;
+      height: 100%;
+      max-height: 720px;
+    }
+    .cover-mock-frame .ui-mock {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: perspective(2400px) rotateY(-14deg) rotateX(2deg);
+      transform-origin: center right;
+    }
+
+    /* === Diagonal banner for slides === */
+    .diag-banner {
+      position: absolute;
+      top: 50%;
+      left: -120px;
+      right: -120px;
+      transform: translateY(-50%) rotate(-3deg);
+      background: var(--red);
+      color: #fff;
+      padding: 16px 0;
+      font-family: Mulish, sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 48px;
+      letter-spacing: -.02em;
+      text-align: center;
+      white-space: nowrap;
+      z-index: 4;
+      box-shadow: 0 20px 60px rgba(188,0,23,.32);
+    }
+
+    /* === Quote big === */
+    .pull-quote-big {
+      font-family: Mulish, sans-serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 56px;
+      line-height: 1.14;
+      letter-spacing: -.02em;
+      max-width: 1280px;
+    }
+    .pull-quote-big::before {
+      content: "\201C";
+      font-family: Mulish, sans-serif;
+      font-style: italic;
+      font-weight: 900;
+      font-size: 220px;
+      line-height: 0;
+      color: var(--red);
+      position: absolute;
+      margin-left: -90px;
+      margin-top: 100px;
+    }
+
+    /* === Print === */
+    @media print {
+      html, body { overflow: visible; background: #fff; }
+      .stage { display: block; height: auto; }
+      .deck { transform: none !important; box-shadow: none; width: 100%; height: auto; }
+      .slide {
+        display: flex !important;
+        position: relative;
+        page-break-after: always;
+        opacity: 1 !important;
+        animation: none !important;
+        width: 100vw; height: 100vh;
+      }
+      .reveal, [class*="reveal-"] { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .help { display: none; }
+      * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      @page { size: landscape; margin: 0; }
+    }
+  
+.logo-stamp .logo-img{height:32px;width:auto;display:block;object-fit:contain;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:18px;}
+.pricing-card{background:var(--ink-card);border:1px solid rgba(255,255,255,.12);padding:26px 24px;color:#fff;position:relative;}
+.pricing-card.featured{border:2px solid var(--red);box-shadow:0 0 0 1px rgba(188,0,23,.3);}
+.pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-family:Montserrat,sans-serif;font-weight:800;font-size:9px;letter-spacing:.24em;padding:6px 14px;text-transform:uppercase;}
+.pricing-price{font-family:Mulish,sans-serif;font-weight:900;font-size:42px;line-height:1;margin:14px 0 4px;}
+.pricing-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;font-size:14px;color:rgba(255,255,255,.78);}
+.pricing-list div{padding-left:18px;position:relative;}
+.pricing-list div::before{content:"";position:absolute;left:0;top:8px;width:8px;height:2px;background:var(--red-hot);}
+.compare-table{width:100%;border-collapse:collapse;font-size:14px;}
+.compare-table th,.compare-table td{padding:11px 12px;border-bottom:1px solid var(--paper-line);text-align:left;vertical-align:top;}
+.compare-table thead th{background:var(--ink);color:#fff;font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.16em;text-transform:uppercase;}
+.compare-table tbody tr.highlight{background:rgba(188,0,23,.045);}
+.compare-table .col-rb{background:rgba(188,0,23,.04);font-weight:600;}
+.tco-wrap{display:grid;grid-template-columns:1.3fr .8fr;gap:36px;flex:1;align-items:stretch;}
+.tco-chart{display:flex;align-items:flex-end;justify-content:space-around;gap:20px;height:560px;padding-top:30px;border-bottom:2px solid var(--paper-line);}
+.tco-group{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;}
+.tco-bars{display:flex;gap:14px;align-items:flex-end;height:500px;}
+.tco-bar{width:64px;background:linear-gradient(180deg,var(--red-hot),var(--red));position:relative;border:1px solid rgba(188,0,23,.2);}
+.tco-bar.rb{background:linear-gradient(180deg,#374151,#111827);}
+.tco-bar .val{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:Mulish,sans-serif;font-weight:800;font-size:12px;color:var(--red);white-space:nowrap;}
+.tco-bar.rb .val{color:var(--ink);}
+.tco-label{font-family:JetBrains Mono,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.stack-layer{display:flex;flex-direction:column;gap:10px;}
+.layer-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;}
+.layer-card strong{font-family:Mulish,sans-serif;font-weight:800;font-size:16px;color:#fff;}
+.layer-card span{font-size:12px;color:rgba(255,255,255,.62);}
+.eco-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:20px;}
+.eco-card{background:#fff;border:1px solid var(--paper-line);border-top:4px solid var(--red);padding:18px 16px;min-height:210px;display:flex;flex-direction:column;}
+.eco-card h5{font-family:Mulish,sans-serif;font-weight:800;font-size:17px;margin:10px 0 8px;}
+.eco-card p{font-size:13px;line-height:1.45;color:var(--ink-soft);flex:1;}
+.cta-step{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.14);}
+.cta-num{width:48px;height:48px;border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-family:Mulish,sans-serif;font-weight:900;font-size:20px;color:var(--red-hot);}
+.mini-table{width:100%;border-collapse:collapse;font-size:12px;}
+.mini-table th,.mini-table td{padding:8px 10px;border-bottom:1px solid var(--paper-line);text-align:left;vertical-align:top;}
+.mini-table th{font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-strong);}
+
+/* ====== PREMIUM TABLES SKILL ====== */
+.premium-table { width:100%; display:grid; grid-template-columns: minmax(320px, 1.4fr) repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: rgba(0,0,0,0.06); border: 1px solid var(--paper-line); border-radius: 8px; overflow: hidden; margin-top: 18px;}
+.theme-ink .premium-table { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+.premium-cell { background: var(--surface, #fff); padding: 18px 24px; display:flex; flex-direction:column; justify-content:center; font-family: Montserrat, sans-serif; }
+.theme-ink .premium-cell { background: var(--ink-card); color: #fff; }
+.premium-th { background: var(--paper-soft); padding: 14px 24px; font-family: Mulish, sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-strong); display:flex; align-items:center; }
+.theme-ink .premium-th { background: #1A2028; color: rgba(255,255,255,0.7); }
+.premium-cell.col-rb { background: rgba(188,0,23,.03); border-left: 2px solid var(--red); }
+.theme-ink .premium-cell.col-rb { background: rgba(188,0,23,.08); }
+.premium-th.col-rb { background: rgba(188,0,23,.06); color: var(--red); border-left: 2px solid var(--red); }
+.theme-ink .premium-th.col-rb { background: rgba(188,0,23,.15); color: #fff; }
+.premium-row-title { font-weight: 700; font-size: 15px; color: var(--ink); margin-bottom:4px; }
+.theme-ink .premium-row-title { color: #fff; }
+.premium-row-desc { font-size: 13px; color: var(--muted); line-height:1.4; }
+.theme-ink .premium-row-desc { color: rgba(255,255,255,.6); }
+.premium-val { font-size: 15px; color: var(--ink-soft); line-height: 1.4; }
+.theme-ink .premium-val { color: rgba(255,255,255,.8); }
+.premium-val strong { color: var(--ink); font-weight: 700; }
+.theme-ink .premium-val strong { color: #fff; }
+.premium-val .svg-icon { display:inline-block; vertical-align:middle; margin-right:6px; color:var(--red); }
+.premium-val.ok { color: var(--green-dim); font-weight:600; }
+.theme-ink .premium-val.ok { color: #57E48F; }
+
+/* Mockups & UI */
+.mockup-dashboard { background: #0E1318; border-radius: 12px; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 40px 100px rgba(0,0,0,.6); overflow:hidden; display:flex; flex-direction:column; }
+.mockup-dash-header { height: 60px; background: #1A2028; border-bottom: 1px solid rgba(255,255,255,.05); display:flex; align-items:center; padding: 0 24px; justify-content:space-between; }
+.mockup-dash-body { flex:1; display:flex; padding: 24px; gap: 24px; }
+.mockup-kpi-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); border-radius: 8px; padding: 20px; flex:1; }
+.mockup-kpi-val { font-family: Mulish, sans-serif; font-weight: 800; font-size: 42px; color: #fff; margin: 12px 0 8px; }
+.mockup-kpi-lbl { font-size: 13px; color: rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.1em; }
+.mockup-chart-area { background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05); border-radius: 8px; flex:2; display:flex; flex-direction:column; padding: 20px; }
+
+/* ===== ORCHESTRATOR MOCKUP (matches real product) ===== */
+.orch-window { background:#fff; border-radius:10px; box-shadow:0 24px 80px rgba(18,24,32,.22); border:1px solid rgba(0,0,0,.08); overflow:hidden; display:flex; flex-direction:column; font-family:Inter,Montserrat,sans-serif; }
+.orch-topbar { height:46px; background:linear-gradient(90deg, #8B0010 0%, #BC0017 60%, #D43A4F 100%); display:flex; align-items:center; padding:0 16px; justify-content:space-between; color:#fff; }
+.orch-topbar .brand { display:flex; align-items:center; gap:10px; font-family:Mulish,sans-serif; font-weight:800; font-size:14px; letter-spacing:.02em; }
+.orch-topbar .brand .rb-mark { width:18px; height:18px; background:#fff; clip-path:polygon(0 0, 100% 0, 100% 65%, 60% 100%, 0 100%); }
+.orch-topbar .btn { background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); padding:4px 10px; border-radius:4px; font-size:10px; font-weight:600; }
+.orch-topbar .user { display:flex; align-items:center; gap:8px; font-size:11px; }
+.orch-topbar .user-circle { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,.25); }
+.orch-body { display:grid; grid-template-columns:170px 1fr; flex:1; min-height:0; }
+.orch-sidebar { background:#F4F2F0; padding:8px 0; font-size:11px; color:#444; border-right:1px solid #E5E1DC; }
+.orch-sidebar .nav-section { padding:4px 14px; font-size:9px; color:#999; text-transform:uppercase; letter-spacing:.1em; margin-top:6px; }
+.orch-sidebar .nav-item { padding:6px 14px; display:flex; align-items:center; gap:8px; cursor:pointer; }
+.orch-sidebar .nav-item.active { background:#fff; color:var(--red); font-weight:700; border-left:3px solid var(--red); padding-left:11px; }
+.orch-sidebar .nav-item svg { width:12px; height:12px; flex-shrink:0; }
+.orch-sidebar .nav-sub { padding:3px 14px 3px 32px; font-size:10px; color:#888; }
+.orch-main { padding:14px 16px; background:#FAFAFA; overflow:hidden; }
+.orch-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.orch-kpi { background:#fff; border:1px solid #E5E1DC; border-radius:6px; padding:14px 16px; }
+.orch-kpi .lbl { font-size:12px; font-weight:700; color:#333; margin-bottom:4px; }
+.orch-kpi .val { font-family:Mulish,sans-serif; font-weight:800; font-size:32px; color:var(--red); line-height:1; text-align:right; margin:6px 0; }
+.orch-kpi .meta { font-size:9px; color:#888; display:flex; gap:8px; flex-wrap:wrap; padding-top:6px; border-top:1px solid #EFEDEA; }
+.orch-chart-block { background:#fff; border:1px solid #E5E1DC; border-radius:6px; padding:12px; margin-top:10px; }
+.orch-chart-block .head { font-size:12px; font-weight:700; color:#333; margin-bottom:8px; }
+.orch-chart-title { font-size:10px; text-align:center; color:#666; margin-bottom:4px; }
+
+/* ===== NEXUS MOCKUP (premium app builder UI) ===== */
+.nexus-window { background:#F7F8FA; border-radius:10px; box-shadow:0 24px 80px rgba(18,24,32,.22); border:1px solid rgba(0,0,0,.08); overflow:hidden; display:flex; flex-direction:column; font-family:Inter,Montserrat,sans-serif; }
+.nexus-topbar { height:46px; background:#fff; border-bottom:1px solid #E8EAED; display:flex; align-items:center; padding:0 16px; justify-content:space-between; }
+.nexus-topbar .brand { display:flex; align-items:center; gap:10px; font-family:Mulish,sans-serif; font-weight:800; font-size:14px; letter-spacing:.02em; color:#1A2028; }
+.nexus-topbar .brand .nx-mark { width:18px; height:18px; background:#1A2028; clip-path:polygon(0 0, 100% 0, 100% 65%, 60% 100%, 0 100%); }
+.nexus-topbar .url { font-family:'JetBrains Mono',monospace; font-size:10px; color:#888; padding:3px 10px; background:#F4F4F4; border-radius:4px; }
+.nexus-body { display:grid; grid-template-columns:160px 1fr; flex:1; min-height:0; }
+.nexus-sidebar { background:#fff; border-right:1px solid #E8EAED; padding:10px 0; font-size:11px; }
+.nexus-sidebar .label { font-size:9px; color:#999; text-transform:uppercase; letter-spacing:.12em; padding:4px 14px; }
+.nexus-sidebar .item { padding:7px 14px; color:#555; display:flex; align-items:center; gap:8px; }
+.nexus-sidebar .item.active { background:#FFF1F2; color:var(--red); font-weight:700; border-left:3px solid var(--red); padding-left:11px; }
+.nexus-sidebar .item .pip { width:6px; height:6px; border-radius:50%; background:#D9D9D9; }
+.nexus-sidebar .item.active .pip { background:var(--red); }
+.nexus-main { padding:14px; overflow:hidden; display:flex; flex-direction:column; gap:10px; }
+.nexus-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.nexus-kpi { background:#fff; border:1px solid #E8EAED; border-radius:8px; padding:12px 14px; }
+.nexus-kpi .lbl { font-size:10px; color:#888; text-transform:uppercase; letter-spacing:.08em; }
+.nexus-kpi .val { font-family:Mulish,sans-serif; font-weight:800; font-size:26px; color:#1A2028; line-height:1; margin-top:6px; }
+.nexus-kpi .delta { font-size:10px; margin-top:4px; }
+.nexus-kpi .delta.up { color:#0F9D58; }
+.nexus-kpi .delta.down { color:var(--red); }
+.nexus-chart { background:#fff; border:1px solid #E8EAED; border-radius:8px; padding:12px; flex:1; min-height:0; display:flex; flex-direction:column; }
+.nexus-chart .head { font-size:11px; color:#555; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; }
+.nexus-tbl { width:100%; font-size:10px; border-collapse:collapse; }
+.nexus-tbl th { text-align:left; padding:6px 8px; font-size:9px; color:#888; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid #E8EAED; font-weight:600; }
+.nexus-tbl td { padding:6px 8px; border-bottom:1px solid #F4F4F4; color:#333; }
+.nexus-tbl tr.hl td { background:#FFF8F8; font-weight:700; color:var(--red); }
+.score-pill { display:inline-block; padding:2px 8px; border-radius:12px; font-size:9px; font-weight:700; }
+.score-pill.hi { background:#E8F5E9; color:#0F9D58; }
+.score-pill.md { background:#FFF3E0; color:#F29900; }
+.score-pill.lo { background:#FFEBEE; color:var(--red); }
+
+/* ===== ECOSISTEMA (slide 10) ===== */
+.eco-stack { display:grid; grid-template-columns:repeat(5,1fr); gap:18px; flex:1; margin-top:24px; align-items:stretch; }
+.eco-product { background:#fff; border:1px solid var(--paper-line); padding:22px 20px; display:flex; flex-direction:column; gap:12px; position:relative; transition:all .3s ease; box-shadow:0 4px 20px rgba(18,24,32,.04); }
+.eco-product:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(18,24,32,.1); border-color:var(--red); }
+.eco-product::before { content:''; position:absolute; left:0; top:0; right:0; height:3px; background:var(--red); }
+.eco-head { display:flex; justify-content:space-between; align-items:center; }
+.eco-code { font-family:Mulish,sans-serif; font-weight:900; font-size:36px; color:var(--paper-line); line-height:1; }
+.eco-tag { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--red); background:rgba(188,0,23,.06); padding:4px 8px; }
+.eco-icon { width:48px; height:48px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; margin-top:6px; }
+.eco-name { font-family:Mulish,sans-serif; font-weight:900; font-size:24px; color:var(--ink); margin:6px 0 0; line-height:1; }
+.eco-hook { font-family:Mulish,sans-serif; font-weight:700; font-size:13px; color:var(--ink); line-height:1.35; margin:0; }
+.eco-desc { font-size:12px; color:var(--muted-strong); line-height:1.5; margin:0; flex:1; }
+.eco-feats { display:flex; flex-direction:column; gap:6px; padding-top:10px; border-top:1px solid var(--paper-line); }
+.eco-feat { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted-strong); }
+.eco-bullet { width:5px; height:5px; background:var(--red); border-radius:50%; flex-shrink:0; }
+.eco-kpi { background:#FBFAF7; border-top:1px solid var(--paper-line); padding:12px 0 0; margin-top:auto; }
+.eco-kpi-val { font-family:Mulish,sans-serif; font-weight:900; font-size:26px; color:var(--red); line-height:1; }
+.eco-kpi-lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
+
+/* ===== PRICING (slide 12) ===== */
+.pricing-grid-v2 { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; flex:1; margin-top:24px; align-items:stretch; }
+.pricing-card-v2 { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); padding:32px 28px; color:#fff; position:relative; display:flex; flex-direction:column; gap:14px; transition:all .3s ease; }
+.pricing-card-v2.featured { background:linear-gradient(180deg,rgba(188,0,23,.18),rgba(188,0,23,.04)); border:2px solid var(--red); box-shadow:0 30px 80px rgba(188,0,23,.25); transform:translateY(-12px); }
+.pricing-card-v2.featured::before { content:''; position:absolute; inset:-2px; border:2px solid var(--red); pointer-events:none; opacity:.4; filter:blur(6px); }
+.pricing-badge-v2 { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--red); color:#fff; font-family:Mulish,sans-serif; font-weight:900; font-size:10px; letter-spacing:.22em; padding:6px 14px; text-transform:uppercase; }
+.pricing-tier { display:flex; align-items:center; gap:10px; }
+.pricing-tier-num { font-family:Mulish,sans-serif; font-weight:900; font-size:18px; color:var(--red-hot); }
+.pricing-tier-name { font-family:Mulish,sans-serif; font-weight:800; font-size:22px; color:#fff; }
+.pricing-target { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+.pricing-amount { display:flex; align-items:baseline; gap:8px; padding:10px 0; border-top:1px solid rgba(255,255,255,.08); border-bottom:1px solid rgba(255,255,255,.08); }
+.pricing-currency { font-family:Mulish,sans-serif; font-weight:600; font-size:18px; color:rgba(255,255,255,.7); }
+.pricing-num { font-family:Mulish,sans-serif; font-weight:900; font-size:54px; color:#fff; line-height:1; }
+.pricing-period { font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,.5); }
+.pricing-feats { display:flex; flex-direction:column; gap:10px; flex:1; }
+.pricing-feat { display:flex; gap:10px; align-items:start; font-size:13px; color:rgba(255,255,255,.85); line-height:1.4; }
+.pricing-feat svg { color:#57E48F; flex-shrink:0; margin-top:2px; }
+.pricing-feat.strong { font-weight:700; color:#fff; }
+.pricing-cta { text-align:center; padding:12px 0; border:1px solid rgba(255,255,255,.2); font-family:Mulish,sans-serif; font-weight:800; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#fff; margin-top:auto; }
+.pricing-card-v2.featured .pricing-cta { background:var(--red); border-color:var(--red); }
+
+/* ===== COMPARATIVA TABLE (slide 11) ===== */
+.cmp-wrap { display:flex; flex-direction:column; gap:1px; background:var(--paper-line); border:1px solid var(--paper-line); margin-top:18px; box-shadow:0 12px 40px rgba(18,24,32,.06); }
+.cmp-head { display:grid; grid-template-columns:1.4fr 1.3fr 1.3fr; background:var(--ink); color:#fff; font-family:Mulish,sans-serif; font-weight:800; font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
+.cmp-head > div { padding:14px 22px; display:flex; align-items:center; gap:10px; border-right:1px solid rgba(255,255,255,.08); }
+.cmp-head > div:last-child { border-right:none; }
+.cmp-h-rb { background:var(--red); }
+.cmp-row { display:grid; grid-template-columns:1.4fr 1.3fr 1.3fr; gap:1px; background:var(--paper-line); }
+.cmp-row > div { background:#fff; padding:16px 22px; display:flex; align-items:center; gap:12px; font-family:Montserrat,sans-serif; font-size:14px; }
+.cmp-criterio { background:#FBFAF7 !important; font-weight:700; color:var(--ink); }
+.cmp-criterio .cmp-ico { color:var(--red); flex-shrink:0; }
+.cmp-diy { color:var(--muted-strong); }
+.cmp-diy .cmp-dot { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(188,0,23,.08); color:var(--red); font-family:Mulish,sans-serif; font-weight:900; font-size:11px; flex-shrink:0; }
+.cmp-rb { background:rgba(188,0,23,.03) !important; border-left:3px solid var(--red) !important; color:var(--ink); }
+.cmp-rb .cmp-check { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:#0F9D58; color:#fff; font-family:Mulish,sans-serif; font-weight:900; font-size:11px; flex-shrink:0; }
+
+/* ===== TERMINAL/CODE PANEL ===== */
+.term-panel { background:#0E1116; border-radius:8px; padding:14px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#9CDCFE; overflow:hidden; }
+.term-panel .line { margin-bottom:6px; display:flex; gap:10px; }
+.term-panel .line .ts { color:#7F848E; flex-shrink:0; }
+.term-panel .line .tag { font-weight:700; min-width:46px; }
+.term-panel .line .tag.ok { color:#57E48F; }
+.term-panel .line .tag.warn { color:#F0C674; }
+.term-panel .line .tag.err { color:#FF6B6B; }
+.term-panel .line .tag.run { color:#82AAFF; }
+.term-panel .line .msg { color:#D4D4D4; }
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <div class="deck" id="deck">
+
+      <section class="slide theme-red dark active" data-title="Cover">
+        <div class="watermark" style="left:-40px;top:40px;font-size:720px;">IA</div>
+        <div class="topbar">
+          <div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div>
+          <span class="eyebrow">Edicion comercial · Mayo 2026</span>
+        </div>
+        <div class="cover-grid">
+          <div class="cover-title-block">
+            <span class="tag reveal reveal-1"><span class="dot"></span>Rocketbot Suite</span>
+            <h1 class="display-hero reveal reveal-2" style="font-size:132px;">Agentic<br /><em>Enterprise</em><br />Automation</h1>
+            <span class="ruler white tall reveal reveal-3"></span>
+            <p class="lead reveal reveal-4" style="color:rgba(255,255,255,.86);font-size:26px;">
+              Agentes digitales que piensan, deciden y ejecutan procesos como humanos — 24/7, sin pausas, sin errores.
+            </p>
+            <div class="cover-meta-line reveal reveal-5">
+              <span>Banca</span><span class="dot"></span><span>Retail</span><span class="dot"></span><span>Salud</span><span class="dot"></span><span>Gobierno</span>
+            </div>
+          </div>
+          <div class="cover-mock-frame reveal reveal-3">
+            <div class="ui-mock" style="height:100%;">
+              <div class="ui-titlebar">
+                <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+                <span class="url">nexus.rocketbot.local / cockpit / sourcing</span>
+                <span class="badge-running">En vivo</span>
+              </div>
+              <div class="ui-body" style="grid-template-columns:240px 1fr 300px;">
+                <div class="ui-sidebar">
+                  <span class="label">Modulos</span>
+                  <div class="item active"><span class="pip"></span> Cockpit global</div>
+                  <div class="item"><span class="pip"></span> Ranking vacante</div>
+                  <div class="item"><span class="pip"></span> Alta vacante</div>
+                  <div class="item done"><span class="pip"></span> Alertas IA</div>
+                </div>
+                <div class="ui-main">
+                  <span class="ui-kicker">Nexus · monitoreo de negocio</span>
+                  <div class="ui-h1">287 perfiles analizados.<br /><em>1 nuevo top match.</em></div>
+                  <div class="ui-plan">
+                    <div class="head"><span>KPIs del dia</span><span>14:32</span></div>
+                    <div class="ui-step done"><span class="num">01</span><span class="label">Posiciones abiertas</span><span class="status">412</span></div>
+                    <div class="ui-step done"><span class="num">02</span><span class="label">Shortlist generado</span><span class="status">89</span></div>
+                    <div class="ui-step active"><span class="num">03</span><span class="label">Score IA promedio</span><span class="status">76.4</span></div>
+                  </div>
+                </div>
+                <div class="ui-telemetry">
+                  <h5>Pipeline</h5>
+                  <div class="tel-line ok"><span class="t">14:31</span><span class="k">OK</span><span class="v">Gmail webhook recibido</span></div>
+                  <div class="tel-line ok"><span class="t">14:31</span><span class="k">OK</span><span class="v">CV extraido · score 98.2</span></div>
+                  <div class="tel-line ok"><span class="t">14:32</span><span class="k">OK</span><span class="v">Supabase insert 201</span></div>
+                  <div class="tel-line ok"><span class="t">14:32</span><span class="k">OK</span><span class="v">Nexus dashboard refresh</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="counter" style="color:rgba(255,255,255,.85);">01 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:6.25%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Cementerio">
+        <div class="watermark" style="right:-20px;top:80px;font-size:520px;">95</div>
+        <div class="topbar">
+          <div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div>
+          <span class="eyebrow">Acto I · dato crudo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:48px;flex:1;align-items:start;">
+          <div>
+            <h2 class="display-section sm reveal reveal-1" style="font-size:68px;color:#fff;">El 95% de los pilotos de IA generativa <em>no genera retorno medible.</em></h2>
+            <span class="ruler white reveal reveal-2"></span>
+            <p class="body reveal reveal-3" style="font-size:20px;">Y no es problema de la tecnologia. Es problema de como se entra.</p>
+            <div class="stat-row reveal reveal-4" style="margin-top:28px;">
+              <div class="cell"><div class="v" style="font-size:48px;">95%</div><div class="lbl" style="font-size:16px;">Pilotos GenAI sin impacto en P&amp;L a 6+ meses</div><div class="src" style="font-size:12px;">MIT NANDA 2025</div></div>
+              <div class="cell"><div class="v" style="font-size:48px;">40%</div><div class="lbl" style="font-size:16px;">Proyectos agénticos cancelados antes de 2028</div><div class="src" style="font-size:12px;">Gartner 2025</div></div>
+              <div class="cell"><div class="v" style="font-size:48px;">80%</div><div class="lbl" style="font-size:16px;">Proyectos de IA empresarial que fracasan</div><div class="src" style="font-size:12px;">RAND 2024</div></div>
+            </div>
+          </div>
+          <div class="reveal reveal-5">
+            <p style="font-family:Montserrat,sans-serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:16px;">Tasa de fracaso por tipo de proyecto (2024)</p>
+            <div class="bar-compare">
+              <div class="bar-row"><div class="lbl-row"><span>Proyectos IT tradicionales</span><strong>~40%</strong></div><div class="track"><div class="fill minor" style="width:40%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Software corporativo</span><strong>~50%</strong></div><div class="track"><div class="fill minor" style="width:50%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Proyectos de IA empresarial</span><strong>~80%</strong></div><div class="track"><div class="fill" style="width:80%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Pilotos GenAI sin retorno medible</span><strong>~95%</strong></div><div class="track"><div class="fill" style="width:95%;"></div></div></div>
+            </div>
+            <div class="card glass" style="margin-top:28px;padding:22px;">
+              <p style="font-family:Mulish,sans-serif;font-style:italic;font-size:20px;line-height:1.4;color:rgba(255,255,255,.92);">
+                "Las empresas no fracasan en IA por elegir mal el modelo. Fracasan en lo que pasa antes y despues del modelo: seguridad, costo real, operacion y acompanamiento."
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="source-strip"><div class="source-links"><a href="https://nanda.media.mit.edu/ai_report_2025.pdf" target="_blank" rel="noopener">MIT NANDA · GenAI Divide 2025</a> · <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25" target="_blank" rel="noopener">Gartner · Agentic AI 2025</a> · <a href="https://www.rand.org/pubs/research_reports/RRA2680-1.html" target="_blank" rel="noopener">RAND · Root Causes of AI Failure</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Defensa estrategica</div>
+        <div class="counter">02 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:12.50%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="4 pilares">
+        <div class="watermark" style="right:-20px;top:120px;font-size:580px;color:var(--red);opacity:.05;">04</div>
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Framework · cuatro pilares</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1.55fr;gap:56px;flex:1;align-items:start;">
+          <div>
+            <h2 class="h2 reveal reveal-1">Las empresas que no fracasan tienen estos <em>4 pilares</em> cubiertos.</h2>
+            <span class="ruler reveal reveal-2"></span>
+            <p class="body reveal reveal-3">Antes de elegir un modelo. Antes de elegir un partner. Antes de escribir una sola linea de codigo.</p>
+          </div>
+          <div class="grid-2 reveal reveal-4"><div class="card flame"><div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">01</span><div style="color:var(--red);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div></div><h4>Seguridad</h4><p><strong>Tus datos sensibles necesitan un lugar donde dormir tranquilos.</strong><br />Antes de activar cualquier herramienta de IA, hay que decidir donde vive el dato y bajo que jurisdiccion.</p><p style="margin-top:12px;font-size:14px;color:var(--muted);">Donde esta tu data cuando el modelo la ve?</p></div><div class="card flame" style="transform:translateY(24px);"><div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">02</span><div style="color:var(--red);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div></div><h4>Costo real y ROI</h4><p><strong>El precio que te muestran es solo la punta del iceberg.</strong><br />Debajo hay integraciones, infra, observabilidad, mantenimiento, talento y lo que rompe a las 3 AM.</p><p style="margin-top:12px;font-size:14px;color:var(--muted);">Sabes cuanto te va a costar el mes 24, no el mes 1?</p></div><div class="card flame"><div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">03</span><div style="color:var(--red);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div></div><h4>Operacion y control</h4><p><strong>Cuando un agente decide, alguien tiene que poder explicar por que.</strong><br />Sin trazabilidad tecnica y de negocio, la IA pasa de palanca a riesgo de cumplimiento.</p><p style="margin-top:12px;font-size:14px;color:var(--muted);">Quien te avisa cuando el agente se desvia?</p></div><div class="card flame" style="transform:translateY(24px);"><div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">04</span><div style="color:var(--red);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div></div><h4>Acompanamiento</h4><p><strong>El conocimiento de tu IA no puede vivir en una sola persona.</strong><br />Si tu unica defensa es un developer senior, el dia que renuncia se va con tu inversion.</p><p style="margin-top:12px;font-size:14px;color:var(--muted);">Que pasa con tu IA el dia que renuncia tu mejor developer?</p></div></div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Defensa estrategica</div>
+        <div class="counter">03 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:18.75%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="Seguridad">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Pilar 01 · Seguridad</span></div>
+        <h2 class="h2 reveal reveal-1">Tu data no deberia viajar al otro lado del mundo<br />para que la IA la <em>lea</em>.</h2>
+        <span class="ruler reveal reveal-2"></span>
+        <div class="grid-2 reveal reveal-3" style="flex:1;margin-top:8px;">
+          <div class="card outline" style="display:flex;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">DIY · Claude + Python</span><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+            <h4>Lo que pasa cuando construyes solo</h4>
+            <div class="body" style="font-size:17px;flex:1;"><ul>
+              <li>Toda llamada a la API sale de tu red corporativa</li>
+              <li>Datos sensibles pasan por servidores en US o Europa</li>
+              <li>Terminos de procesamiento los define el proveedor</li>
+              <li>ISO 27001 / SOC2 / GDPR hay que construirlos por afuera</li>
+            </ul></div>
+            <div style="background:#FDEFEF;padding:12px;border-radius:6px;border:1px dashed rgba(188,0,23,.3);margin-top:16px;">
+               <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);">Riesgo de cumplimiento normativo</p>
+            </div>
+          </div>
+          <div class="card danger" style="display:flex;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;align-items:start;"><span class="num">Rocketbot</span><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+            <h4>Control sobre el ciclo completo del dato</h4>
+            <div class="body" style="font-size:17px;flex:1;"><ul>
+              <li>On-premise total: suite completa en tu infraestructura</li>
+              <li>LLM-agnostico: Claude, GPT, Gemini o modelo privado</li>
+              <li>Air-gap soportado para banca, salud y gobierno</li>
+              <li>Trazabilidad nativa: prompt, respuesta, hash, timestamp</li>
+            </ul></div>
+            <div style="background:rgba(188,0,23,.04);padding:12px;border-radius:6px;border:1px solid rgba(188,0,23,.15);margin-top:16px;">
+               <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);">Cadena de custodia 100% auditable</p>
+            </div>
+          </div>
+        </div>
+        <div class="source-strip"><div class="source-links"><a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">Anthropic · commercial terms</a> · <a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener">ISO 27001</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pilar 01 · Seguridad</div>
+        <div class="counter">04 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:25.00%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Costo y ROI">
+        <div class="watermark" style="left:-30px;bottom:-120px;font-size:480px;">TCO</div>
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Pilar 02 · Costo real y ROI</span></div>
+        <h2 class="h2 reveal reveal-1" style="color:#fff;font-size:52px;">Construir solo con Claude es <em>5-8x</em> mas caro de lo que la API te muestra.</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;flex:1;margin-top:16px;">
+          <div class="reveal reveal-2">
+            <div class="bar-compare">
+              <div class="bar-row"><div class="lbl-row"><span>API tokens (visible)</span><strong>USD 18K</strong></div><div class="track"><div class="fill minor" style="width:8%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Talento AI/ML (loaded)</span><strong>USD 169K</strong></div><div class="track"><div class="fill" style="width:77%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Infra + observability + vector DB</span><strong>USD 19K</strong></div><div class="track"><div class="fill" style="width:12%;"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Onboarding + reposicion de talento</span><strong>USD 29K</strong></div><div class="track"><div class="fill" style="width:16%;"></div></div></div>
+            </div>
+            <p style="margin-top:24px;font-size:15px;color:rgba(255,255,255,.65);">Escenario Mid Enterprise · Año 1 · DIY acumulado ~USD 220K vs Rocketbot Growth ~USD 30K</p>
+            <div style="display:flex;gap:12px;margin-top:32px;">
+                <div class="card glass tight" style="flex:1;"><span class="num">Año 1</span><h4 style="color:#fff;font-size:20px;">Ahorro USD 190K</h4></div>
+                <div class="card glass tight" style="flex:1;"><span class="num">Payback</span><h4 style="color:#fff;font-size:20px;">4-6 meses</h4></div>
+            </div>
+          </div>
+          <div class="reveal reveal-3" style="position:relative;">
+             <div class="mockup-dashboard">
+                <div class="mockup-dash-header">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:24px;height:24px;background:var(--red);clip-path:polygon(0 0, 100% 0, 100% 65%, 60% 100%, 0 100%);"></div><span style="font-family:Mulish,sans-serif;font-weight:800;color:#fff;">Orchestrator</span></div>
+                    <div style="display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.6);"><span>Dashboard</span><span>Processes</span><span>Instances</span></div>
+                </div>
+                <div class="mockup-dash-body" style="flex-direction:column;gap:16px;">
+                   <div style="display:flex;gap:16px;">
+                      <div class="mockup-kpi-card" style="border-top:2px solid var(--red);"><div class="mockup-kpi-lbl">Instances</div><div class="mockup-kpi-val">22</div><div style="font-size:11px;color:rgba(255,255,255,.4);">Windows: 13 &nbsp; Linux: 5</div></div>
+                      <div class="mockup-kpi-card"><div class="mockup-kpi-lbl">Robots</div><div class="mockup-kpi-val">56</div><div style="font-size:11px;color:rgba(255,255,255,.4);">Executions: 1558 &nbsp; This month: 290</div></div>
+                      <div class="mockup-kpi-card"><div class="mockup-kpi-lbl">Nexus ROI</div><div class="mockup-kpi-val" style="color:#57E48F;">$48k</div><div style="font-size:11px;color:rgba(255,255,255,.4);">Ahorro acumulado YTD</div></div>
+                   </div>
+                   <div class="mockup-chart-area" style="min-height:160px;">
+                      <div class="mockup-kpi-lbl" style="margin-bottom:16px;">Last Executions &amp; Process</div>
+                      <div style="flex:1;border-bottom:1px solid rgba(255,255,255,.1);position:relative;">
+                         <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100" style="position:absolute;bottom:0;"><polyline points="0,100 20,40 40,60 60,30 80,80 100,20" fill="none" stroke="var(--red)" stroke-width="2"/><polyline points="0,100 20,70 40,50 60,80 80,90 100,50" fill="none" stroke="#0071DC" stroke-width="2"/></svg>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+        <div class="source-strip"><div class="source-links"><a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">Anthropic pricing</a> · <a href="https://www.rand.org/pubs/research_reports/RRA2680-1.html" target="_blank" rel="noopener">RAND · AI failure</a> · <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" target="_blank" rel="noopener">McKinsey · State of AI</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pilar 02 · Costo real</div>
+        <div class="counter">05 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:31.25%"></div></div>
+      </section>
+      <section class="slide theme-paper-alt" data-title="Operacion">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Pilar 03 · Operacion y control</span></div>
+        <h2 class="h2 reveal reveal-1" style="font-size:48px;">Un solo monitoreo no alcanza.<br />Necesitas <em>dos</em>.</h2>
+        <span class="ruler reveal reveal-2"></span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;flex:1;margin-top:14px;align-items:stretch;" class="reveal reveal-3">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="background:var(--red);color:#fff;font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.18em;padding:4px 10px;">ORQUESTADOR</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">MONITOREO TECNICO</span>
+            </div>
+            
+    <div class="orch-window" style="height:100%;">
+      <div class="orch-topbar">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="brand"><span class="rb-mark"></span><span>Orchestrator</span></div>
+          <span class="btn">Connect Instances</span>
+        </div>
+        <div class="user"><span>Academy Rocketbot</span><span style="opacity:.7;">|</span><span>Franco Guinazu</span><span class="user-circle"></span></div>
+      </div>
+      <div class="orch-body">
+        <div class="orch-sidebar">
+          <div class="nav-section">Navigation</div>
+          <div class="nav-item active" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-7-7v3"/><path d="M5 12a7 7 0 0 0 7 7v-3"/></svg>Processes</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Instances</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>Licenses</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Insight</div>
+          <div class="nav-sub">- Execution chart</div>
+          <div class="nav-sub">- Logs error chart</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Form Xperience</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>Assets</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>Users &amp; Roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>Logs</div>
+        </div>
+        <div class="orch-main">
+          <div class="orch-kpis"><div class="orch-kpi"><div class="lbl">Instances</div><div class="val">22</div><div class="meta">Windows: 13 · Linux: 5 · Mac: 2 · Docker: 2</div></div><div class="orch-kpi"><div class="lbl">Robots</div><div class="val">56</div><div class="meta">Executions: 1558 · This month: 290 · Today: 25</div></div><div class="orch-kpi"><div class="lbl">Xperience</div><div class="val">38</div><div class="meta">Subm.: 38 · This week: 120 · Today: 50</div></div></div>
+          <div class="orch-chart-block">
+            <div class="head">Last Executions & Process</div>
+            <div class="orch-chart-title">Last week executions</div>
+            <div style="position:relative;height:140px;padding:8px 4px 18px 28px;">
+              <div style="position:absolute;left:0;top:0;bottom:18px;width:24px;display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:#999;text-align:right;padding-right:4px;">
+                <span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0</span>
+              </div>
+              <div style="position:relative;height:100%;border-left:1px solid #E5E1DC;border-bottom:1px solid #E5E1DC;">
+                <svg viewBox="0 0 700 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;">
+                  <polyline points="0,100 117,40 234,60 351,30 468,80 585,20 700,55" fill="none" stroke="#BC0017" stroke-width="2"/>
+                  <polyline points="0,100 117,70 234,55 351,75 468,85 585,40 700,30" fill="none" stroke="#1F4FB0" stroke-width="2"/>
+                  <polyline points="0,100 117,60 234,80 351,60 468,90 585,70 700,75" fill="none" stroke="#0F9D58" stroke-width="2"/>
+                </svg>
+                <div style="position:absolute;left:0;right:0;bottom:-18px;display:flex;justify-content:space-between;font-size:8px;color:#999;">
+                  <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        <div class="orch-chart-block" style="margin-top:8px;padding:10px 12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:12px;font-weight:700;color:#333;">Projects</div>
+            <div style="background:#0F9D58;color:#fff;font-size:9px;font-weight:700;padding:3px 10px;border-radius:3px;">+ Add Project</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead><tr><th style="text-align:left;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Name</th><th style="text-align:left;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Description</th><th style="text-align:right;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Processes</th></tr></thead>
+            <tbody><tr><td style="padding:5px 8px;font-size:10px;color:#333;border-bottom:1px solid #F0EEEA;">agent-cv-sourcing</td><td style="padding:5px 8px;font-size:10px;color:#888;border-bottom:1px solid #F0EEEA;">Pipeline de seleccion masiva</td><td style="padding:5px 8px;font-size:10px;color:#333;text-align:right;border-bottom:1px solid #F0EEEA;">15</td></tr><tr><td style="padding:5px 8px;font-size:10px;color:#333;border-bottom:1px solid #F0EEEA;">invoice-extractor</td><td style="padding:5px 8px;font-size:10px;color:#888;border-bottom:1px solid #F0EEEA;">Lectura SAP + ERP</td><td style="padding:5px 8px;font-size:10px;color:#333;text-align:right;border-bottom:1px solid #F0EEEA;">9</td></tr><tr><td style="padding:5px 8px;font-size:10px;color:#333;border-bottom:1px solid #F0EEEA;">call-center-voice</td><td style="padding:5px 8px;font-size:10px;color:#888;border-bottom:1px solid #F0EEEA;">Soporte conversacional</td><td style="padding:5px 8px;font-size:10px;color:#333;text-align:right;border-bottom:1px solid #F0EEEA;">12</td></tr></tbody>
+          </table>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+    
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="background:var(--ink);color:#fff;font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.18em;padding:4px 10px;">NEXUS</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">MONITOREO DE NEGOCIO</span>
+            </div>
+            
+    <div class="nexus-window" style="height:100%;">
+      <div class="nexus-topbar">
+        <div class="brand"><span class="nx-mark"></span><span>Nexus</span></div>
+        <span class="url">nexus.rocketbot.local / cockpit ejecutivo · ahorro mensual</span>
+        <span style="font-size:10px;color:#888;">Franco G.</span>
+      </div>
+      <div class="nexus-body">
+        <div class="nexus-sidebar">
+          <div class="label">Modulos</div>
+          <div class="item active"><span class="pip"></span>Cockpit</div><div class="item"><span class="pip"></span>KPIs P&L</div><div class="item"><span class="pip"></span>Equipos</div><div class="item"><span class="pip"></span>Reportes</div>
+        </div>
+        <div class="nexus-main">
+          <div style="font-family:Mulish,sans-serif;font-weight:800;font-size:14px;color:#1A2028;margin-bottom:2px;">Cockpit ejecutivo · ahorro mensual</div>
+          <div class="nexus-kpis"><div class="nexus-kpi"><div class="lbl">Conversaciones</div><div class="val">612</div><div class="delta up">+320% vs humano</div></div><div class="nexus-kpi"><div class="lbl">Costo por conv.</div><div class="val">$0.21</div><div class="delta up">-$3.40</div></div><div class="nexus-kpi"><div class="lbl">Ahorro mes</div><div class="val">$38.420</div><div class="delta up">Meta cumplida</div></div></div>
+          
+        <div class="nexus-chart" style="flex:0 0 auto;">
+          <div class="head"><span>Ahorro semanal acumulado</span><span style="color:#888;font-weight:500;font-size:10px;">Mayo 2026</span></div>
+          <div style="display:flex;align-items:flex-end;gap:8px;height:100px;padding:8px 4px;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:#D9D9D9;width:24px;height:17px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S1</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:#D9D9D9;width:24px;height:32px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S2</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:var(--red);width:24px;height:50px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S3</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:var(--red);width:24px;height:80px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S4</div></div></div>
+        </div>
+          <div class="nexus-chart" style="flex:1;overflow:hidden;">
+            <div class="head"><span>Detalle</span><span style="color:#888;font-weight:500;font-size:10px;">Tiempo real</span></div>
+            <table class="nexus-tbl"><thead><tr><th>KPI</th><th>Hoy</th><th>Vs baseline</th></tr></thead><tbody><tr><td>CSAT</td><td>4.4 *</td><td>+0.3</td></tr><tr><td>FCR</td><td>78%</td><td>+12 pp</td></tr><tr><td>TMR</td><td>89s</td><td>-73%</td></tr><tr class="hl"><td>Ahorro acum.</td><td>$38,420</td><td>meta 32K</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+          </div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pilar 03 · Operacion</div>
+        <div class="counter">06 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:37.50%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="Call center">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Caso · doble monitoreo</span></div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;">
+          <div>
+            <h2 class="h2 reveal reveal-1" style="font-size:42px;line-height:1.05;margin:0;">Agente de call center · <em>18.000</em> conversaciones/mes</h2>
+            <span class="ruler reveal reveal-2" style="margin-top:10px;"></span>
+            <p class="reveal reveal-3" style="font-size:14px;color:var(--muted-strong);max-width:780px;margin-top:10px;">El dia que el agente alucina respuestas, el <strong>Orquestador</strong> lo detecta en segundos. <strong>Nexus</strong> te muestra cuanta plata pierdes mientras tanto.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;">
+          <div style="background:#fff;border:1px solid var(--paper-line);padding:16px 18px;border-left:3px solid var(--red);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);letter-spacing:.16em;margin-bottom:4px;">VOLUMEN</div>
+            <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:36px;color:var(--ink);line-height:1;">18K</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">conversaciones / mes</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--paper-line);padding:16px 18px;border-left:3px solid var(--red);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);letter-spacing:.16em;margin-bottom:4px;">UPTIME</div>
+            <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:36px;color:var(--ink);line-height:1;">99.97%</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">SLA cumplido</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--paper-line);padding:16px 18px;border-left:3px solid #0F9D58;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#0F9D58;letter-spacing:.16em;margin-bottom:4px;">AHORRO MES</div>
+            <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:36px;color:var(--ink);line-height:1;">$38K</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">vs equipo humano base</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--paper-line);padding:16px 18px;border-left:3px solid #0F9D58;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#0F9D58;letter-spacing:.16em;margin-bottom:4px;">FCR</div>
+            <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:36px;color:var(--ink);line-height:1;">78%</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">+12 pp vs humano</div>
+          </div>
+        </div>
+        <div class="reveal reveal-5" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;margin-top:16px;align-items:stretch;min-height:0;">
+          <div style="display:flex;flex-direction:column;gap:8px;min-height:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="background:var(--red);color:#fff;font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.18em;padding:4px 10px;">ORQUESTADOR</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">voice-customer-support · vista tecnica</span>
+            </div>
+            
+    <div class="orch-window" style="height:100%;">
+      <div class="orch-topbar">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="brand"><span class="rb-mark"></span><span>Orchestrator</span></div>
+          <span class="btn">Connect Instances</span>
+        </div>
+        <div class="user"><span>Academy Rocketbot</span><span style="opacity:.7;">|</span><span>Franco Guinazu</span><span class="user-circle"></span></div>
+      </div>
+      <div class="orch-body">
+        <div class="orch-sidebar">
+          <div class="nav-section">Navigation</div>
+          <div class="nav-item active" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-7-7v3"/><path d="M5 12a7 7 0 0 0 7 7v-3"/></svg>Processes</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Instances</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>Licenses</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Insight</div>
+          <div class="nav-sub">- Execution chart</div>
+          <div class="nav-sub">- Logs error chart</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Form Xperience</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>Assets</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>Users &amp; Roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>Logs</div>
+        </div>
+        <div class="orch-main">
+          <div class="orch-kpis"><div class="orch-kpi"><div class="lbl">Instances</div><div class="val">12/12</div><div class="meta">uptime 99.97% · p95 2.6s</div></div><div class="orch-kpi"><div class="lbl">Conv.</div><div class="val">18.241</div><div class="meta">resolved (87s) · HITL: 3</div></div><div class="orch-kpi"><div class="lbl">Alerts</div><div class="val">02</div><div class="meta">latency >3s · auto-scale +2</div></div></div>
+          <div class="orch-chart-block">
+            <div class="head">Latencia p95 vs threshold</div>
+            <div class="orch-chart-title">Ultimas 24h</div>
+            <div style="position:relative;height:140px;padding:8px 4px 18px 28px;">
+              <div style="position:absolute;left:0;top:0;bottom:18px;width:24px;display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:#999;text-align:right;padding-right:4px;">
+                <span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0</span>
+              </div>
+              <div style="position:relative;height:100%;border-left:1px solid #E5E1DC;border-bottom:1px solid #E5E1DC;">
+                <svg viewBox="0 0 700 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;">
+                  <polyline points="0,100 117,40 234,60 351,30 468,80 585,20 700,55" fill="none" stroke="#BC0017" stroke-width="2"/>
+                  <polyline points="0,100 117,70 234,55 351,75 468,85 585,40 700,30" fill="none" stroke="#1F4FB0" stroke-width="2"/>
+                  <polyline points="0,100 117,60 234,80 351,60 468,90 585,70 700,75" fill="none" stroke="#0F9D58" stroke-width="2"/>
+                </svg>
+                <div style="position:absolute;left:0;right:0;bottom:-18px;display:flex;justify-content:space-between;font-size:8px;color:#999;">
+                  <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        <div class="orch-chart-block" style="margin-top:8px;padding:10px 12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:12px;font-weight:700;color:#333;">Projects</div>
+            <div style="background:#0F9D58;color:#fff;font-size:9px;font-weight:700;padding:3px 10px;border-radius:3px;">+ Add Project</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead><tr><th style="text-align:left;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Name</th><th style="text-align:left;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Description</th><th style="text-align:right;padding:4px 8px;font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #E5E1DC;">Processes</th></tr></thead>
+            <tbody><tr><td style="padding:5px 8px;font-size:10px;color:#333;border-bottom:1px solid #F0EEEA;">voice-customer-support</td><td style="padding:5px 8px;font-size:10px;color:#888;border-bottom:1px solid #F0EEEA;">Voz + LLM + escalation</td><td style="padding:5px 8px;font-size:10px;color:#333;text-align:right;border-bottom:1px solid #F0EEEA;">18</td></tr></tbody>
+          </table>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+    
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;min-height:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="background:var(--ink);color:#fff;font-family:Mulish,sans-serif;font-weight:800;font-size:10px;letter-spacing:.18em;padding:4px 10px;">NEXUS</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">call-center · VP comercial</span>
+            </div>
+            
+    <div class="nexus-window" style="height:100%;">
+      <div class="nexus-topbar">
+        <div class="brand"><span class="nx-mark"></span><span>Nexus</span></div>
+        <span class="url">nexus.rocketbot.local / dashboard ejecutivo · vp comercial</span>
+        <span style="font-size:10px;color:#888;">Franco G.</span>
+      </div>
+      <div class="nexus-body">
+        <div class="nexus-sidebar">
+          <div class="label">Modulos</div>
+          <div class="item active"><span class="pip"></span>Cockpit</div><div class="item"><span class="pip"></span>Por equipo</div><div class="item"><span class="pip"></span>Llamadas</div><div class="item"><span class="pip"></span>Costos</div>
+        </div>
+        <div class="nexus-main">
+          <div style="font-family:Mulish,sans-serif;font-weight:800;font-size:14px;color:#1A2028;margin-bottom:2px;">Dashboard ejecutivo · VP Comercial</div>
+          <div class="nexus-kpis"><div class="nexus-kpi"><div class="lbl">CSAT</div><div class="val">4.4 *</div><div class="delta up">+0.3</div></div><div class="nexus-kpi"><div class="lbl">FCR</div><div class="val">78%</div><div class="delta up">+12 pp</div></div><div class="nexus-kpi"><div class="lbl">Ahorro mes</div><div class="val">$38,420</div><div class="delta up">Meta cumplida</div></div></div>
+          
+        <div class="nexus-chart" style="flex:0 0 auto;">
+          <div class="head"><span>Ahorro semanal vs meta</span><span style="color:#888;font-weight:500;font-size:10px;">USD</span></div>
+          <div style="display:flex;align-items:flex-end;gap:8px;height:100px;padding:8px 4px;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:#D9D9D9;width:24px;height:16px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S1</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:#D9D9D9;width:24px;height:30px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S2</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:var(--red);width:24px;height:51px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S3</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;"><div style="background:var(--red);width:24px;height:80px;border-radius:2px 2px 0 0;"></div><div style="font-size:8px;color:#888;">S4</div></div></div>
+        </div>
+          <div class="nexus-chart" style="flex:1;overflow:hidden;">
+            <div class="head"><span>Detalle</span><span style="color:#888;font-weight:500;font-size:10px;">Tiempo real</span></div>
+            <table class="nexus-tbl"><thead><tr><th>Metrica</th><th>Valor</th><th>Delta</th></tr></thead><tbody><tr><td>TMR</td><td>89s</td><td>-73%</td></tr><tr><td>Costo / conv.</td><td>$0.21</td><td>-$3.40</td></tr><tr class="hl"><td>Ahorro mes</td><td>$38,420</td><td>meta cumplida</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+          </div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pilar 03 · Caso call center</div>
+        <div class="counter">07 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:43.75%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Acompanamiento">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Pilar 04 · Acompanamiento</span></div>
+        <h2 class="display-section sm reveal reveal-1" style="font-size:54px;color:#fff;line-height:1.05;">El dia que renuncia tu mejor developer,<br /><em>que le pasa a tu IA?</em></h2>
+        <span class="ruler white reveal reveal-2" style="margin-top:12px;"></span>
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:32px;flex:1;align-items:stretch;margin-top:20px;">
+
+          <div class="reveal reveal-3" style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:rgba(188,0,23,.18);border:1px solid rgba(188,0,23,.5);color:#FF6B7E;font-family:Mulish,sans-serif;font-weight:900;font-size:18px;">x</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.45);">ESCENARIO A</div>
+                <h3 style="font-family:Mulish,sans-serif;font-weight:800;font-size:24px;color:#fff;margin:2px 0 0;">Construir solo</h3>
+              </div>
+            </div>
+            <p style="font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;">Conocimiento concentrado en una sola persona. Ese es tu unico punto de falla.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--red-hot);">
+                <div>
+                  <div style="font-size:12px;color:rgba(255,255,255,.85);font-weight:600;">Turnover AI/ML en LATAM</div>
+                  <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.4);margin-top:2px;">LinkedIn Workforce 2025</div>
+                </div>
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:32px;color:#FF6B7E;line-height:1;">21%</div>
+              </div>
+              <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--red-hot);">
+                <div>
+                  <div style="font-size:12px;color:rgba(255,255,255,.85);font-weight:600;">Ramp-up del reemplazo senior</div>
+                  <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.4);margin-top:2px;">SHRM benchmark</div>
+                </div>
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:32px;color:#FF6B7E;line-height:1;">6-9m</div>
+              </div>
+              <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--red-hot);">
+                <div>
+                  <div style="font-size:12px;color:rgba(255,255,255,.85);font-weight:600;">Costo de reemplazo (vs salario)</div>
+                  <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.4);margin-top:2px;">Gallup &amp; SHRM</div>
+                </div>
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:32px;color:#FF6B7E;line-height:1;">200%</div>
+              </div>
+              <div style="background:rgba(188,0,23,.12);border:1px solid rgba(188,0,23,.35);padding:14px 16px;border-left:3px solid var(--red);">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#FF6B7E;letter-spacing:.16em;margin-bottom:4px;">RESULTADO</div>
+                <div style="font-family:Mulish,sans-serif;font-style:italic;font-size:15px;color:#fff;line-height:1.4;">"Tu IA depende de una sola persona. Cuando renuncia, se va con tu inversion."</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:64px;">
+            <div style="width:1px;flex:1;background:linear-gradient(180deg,transparent,rgba(255,255,255,.2),transparent);"></div>
+            <div style="background:#fff;color:var(--ink);font-family:Mulish,sans-serif;font-weight:900;font-size:12px;letter-spacing:.16em;padding:8px 0;writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;border-radius:2px;">VS</div>
+            <div style="width:1px;flex:1;background:linear-gradient(180deg,transparent,rgba(255,255,255,.2),transparent);"></div>
+          </div>
+
+          <div class="reveal reveal-5" style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:rgba(15,157,88,.18);border:1px solid rgba(15,157,88,.5);color:#57E48F;font-family:Mulish,sans-serif;font-weight:900;font-size:20px;">v</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.45);">ESCENARIO B</div>
+                <h3 style="font-family:Mulish,sans-serif;font-weight:800;font-size:24px;color:#fff;margin:2px 0 0;">Con Rocketbot</h3>
+              </div>
+            </div>
+            <p style="font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;">Tu IA no depende de una sola persona. Red regional de aliados + soporte continuo.</p>
+            <div style="position:relative;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:14px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px;">Red Rocketbot · LATAM</div>
+              <svg viewBox="0 0 500 180" style="width:100%;height:140px;">
+                <defs>
+                  <radialGradient id="rb-net" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#BC0017" stop-opacity=".5"/><stop offset="100%" stop-color="#BC0017" stop-opacity="0"/></radialGradient>
+                </defs>
+                <circle cx="250" cy="90" r="80" fill="url(#rb-net)"/>
+                <g stroke="rgba(87,228,143,.3)" stroke-width="1">
+                  <line x1="250" y1="90" x2="80" y2="35"/><line x1="250" y1="90" x2="420" y2="35"/>
+                  <line x1="250" y1="90" x2="50" y2="110"/><line x1="250" y1="90" x2="450" y2="110"/>
+                  <line x1="250" y1="90" x2="110" y2="160"/><line x1="250" y1="90" x2="390" y2="160"/>
+                  <line x1="250" y1="90" x2="250" y2="160"/>
+                </g>
+                <g fill="#fff" font-family="Mulish,sans-serif" font-size="9" text-anchor="middle">
+                  <circle cx="250" cy="90" r="24" fill="var(--red)"/><text x="250" y="93" font-weight="800" font-size="11">RB</text>
+                  <circle cx="80" cy="35" r="10" fill="#1F4FB0"/><text x="80" y="22" fill="rgba(255,255,255,.6)">MX</text>
+                  <circle cx="420" cy="35" r="10" fill="#1F4FB0"/><text x="420" y="22" fill="rgba(255,255,255,.6)">CO</text>
+                  <circle cx="50" cy="110" r="11" fill="#0F9D58"/><text x="50" y="132" fill="rgba(255,255,255,.6)">CL</text>
+                  <circle cx="450" cy="110" r="11" fill="#0F9D58"/><text x="450" y="132" fill="rgba(255,255,255,.6)">AR</text>
+                  <circle cx="110" cy="160" r="8" fill="#82AAFF"/><text x="110" y="178" fill="rgba(255,255,255,.6)">PE</text>
+                  <circle cx="390" cy="160" r="8" fill="#82AAFF"/><text x="390" y="178" fill="rgba(255,255,255,.6)">BR</text>
+                  <circle cx="250" cy="160" r="8" fill="#82AAFF"/><text x="250" y="178" fill="rgba(255,255,255,.6)">UY</text>
+                </g>
+              </svg>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div style="background:rgba(15,157,88,.08);border:1px solid rgba(15,157,88,.25);padding:12px 14px;border-left:3px solid #0F9D58;">
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:26px;color:#fff;line-height:1;">+650</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:4px;">Organizaciones activas LATAM</div>
+              </div>
+              <div style="background:rgba(15,157,88,.08);border:1px solid rgba(15,157,88,.25);padding:12px 14px;border-left:3px solid #0F9D58;">
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:26px;color:#fff;line-height:1;">+80</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:4px;">Partners certificados regionales</div>
+              </div>
+              <div style="background:rgba(15,157,88,.08);border:1px solid rgba(15,157,88,.25);padding:12px 14px;border-left:3px solid #0F9D58;">
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:26px;color:#fff;line-height:1;">7d</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:4px;">Onboarding de un reemplazo</div>
+              </div>
+              <div style="background:rgba(15,157,88,.08);border:1px solid rgba(15,157,88,.25);padding:12px 14px;border-left:3px solid #0F9D58;">
+                <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:26px;color:#fff;line-height:1;">24/5</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:4px;">Soporte tecnico continuo</div>
+              </div>
+            </div>
+            <div style="background:rgba(15,157,88,.15);border:1px solid rgba(15,157,88,.4);padding:14px 16px;border-left:3px solid #0F9D58;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#57E48F;letter-spacing:.16em;margin-bottom:4px;">RESULTADO</div>
+              <div style="font-family:Mulish,sans-serif;font-style:italic;font-size:15px;color:#fff;line-height:1.4;">"Knowledge base documentada y red de aliados. Cero dependencia de personas individuales."</div>
+            </div>
+          </div>
+        </div>
+        <div class="source-strip"><div class="source-links"><a href="https://economicgraph.linkedin.com/research" target="_blank" rel="noopener">LinkedIn Workforce Report</a> · <a href="https://www.gallup.com/workplace/247391/fixable-problem-costs-businesses-trillion.aspx" target="_blank" rel="noopener">Gallup · cost of replacement</a> · <a href="https://www.shrm.org" target="_blank" rel="noopener">SHRM</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pilar 04 · Acompanamiento</div>
+        <div class="counter">08 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:50.00%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Arquitectura">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Suite · arquitectura</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;align-items:center;">
+          <div>
+            <h2 class="h2 reveal reveal-1" style="color:#fff;">IA con <em>control total</em></h2>
+            <span class="ruler white reveal reveal-2"></span>
+            <p class="body reveal reveal-3">Rocketbot conecta tus sistemas actuales con inteligencia artificial desde adentro de tu empresa — sin importar si tienen 5 o 30 anos de antiguedad.</p>
+            <div class="body reveal reveal-4" style="margin-top:20px;font-size:18px;"><ul>
+              <li>Cada decision visible y trazable</li>
+              <li>Control total on-premise</li>
+              <li>Costos predecibles desde el piloto</li>
+              <li>Human-in-the-loop cuando se necesita</li>
+            </ul></div>
+          </div>
+          <div class="stack-layer reveal reveal-5" style="gap:4px;"><div class="layer-card" style="margin-bottom:-2px;"><div style="display:flex;gap:16px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red-hot)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg><div><strong>Nexus · Capa de Negocio</strong><br /><span>Visibilidad del impacto en tiempo real</span></div></div><span class="mono" style="color:var(--red-hot);">L6</span></div><div class="layer-card" style="margin-bottom:-2px;"><div style="display:flex;gap:16px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red-hot)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><div><strong>Capa de Supervision</strong><br /><span>Orquestador · Coordina, calendariza y monitorea</span></div></div><span class="mono" style="color:var(--red-hot);">L5</span></div><div class="layer-card" style="margin-bottom:-2px;"><div style="display:flex;gap:16px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red-hot)" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><div><strong>Capa Agentica</strong><br /><span>Saturn Studio · Flujos automaticos sin codigo</span></div></div><span class="mono" style="color:var(--red-hot);">L4</span></div><div class="layer-card" style="margin-bottom:-2px;"><div style="display:flex;gap:16px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red-hot)" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2Z"></path></svg><div><strong>Capa Inteligente</strong><br /><span>AI Studio · Lee correos, documentos, formularios</span></div></div><span class="mono" style="color:var(--red-hot);">L3</span></div><div class="layer-card" style="margin-bottom:-2px;"><div style="display:flex;gap:16px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red-hot)" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg><div><strong>Capa Robotica</strong><br /><span>RPA Studio · AS/400, legacy, escritorio — sin API</span></div></div><span class="mono" style="color:var(--red-hot);">L2</span></div></div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Arquitectura de suite</div>
+        <div class="counter">09 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:56.25%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="Ecosistema">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Ecosistema · cinco productos · una sola suite</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;">
+          <div>
+            <h2 class="h2 reveal reveal-1" style="margin:0;">Un ecosistema disenado para <em>crecer contigo</em></h2>
+            <p class="body reveal reveal-2" style="margin-top:8px;max-width:720px;">Cinco productos. Una sola vision. Tu operacion en el centro. Cada modulo resuelve una capa concreta del problema.</p>
+          </div>
+          <div class="reveal reveal-2" style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;">
+            <span>Conectividad</span><span>·</span><span>Automatizacion</span><span>·</span><span>Inteligencia</span><span>·</span><span>Gobierno</span><span>·</span><span>Negocio</span>
+          </div>
+        </div>
+        <div class="eco-stack reveal reveal-3">
+        <article class="eco-product">
+          <div class="eco-head">
+            <span class="eco-code">01</span>
+            <span class="eco-tag">Conectividad</span>
+          </div>
+          <div class="eco-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9"/></svg></div>
+          <h5 class="eco-name">Saturn Studio</h5>
+          <p class="eco-hook">Conecta apps y sistemas. Visualmente. Sin codigo.</p>
+          <p class="eco-desc">Orquestador visual de flujos. Cientos de conectores nativos a CRMs, ERPs, bases de datos y APIs modernas.</p>
+          <div class="eco-feats"><div class="eco-feat"><span class="eco-bullet"></span>Drag & drop</div><div class="eco-feat"><span class="eco-bullet"></span>REST + GraphQL</div><div class="eco-feat"><span class="eco-bullet"></span>Webhooks bidireccionales</div></div>
+          <div class="eco-kpi">
+            <div class="eco-kpi-val">200+</div>
+            <div class="eco-kpi-lbl">conectores</div>
+          </div>
+        </article>
+        
+        <article class="eco-product">
+          <div class="eco-head">
+            <span class="eco-code">02</span>
+            <span class="eco-tag">Automatizacion</span>
+          </div>
+          <div class="eco-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
+          <h5 class="eco-name">RPA Studio</h5>
+          <p class="eco-hook">Opera AS/400, escritorio y legacy donde ninguna API llega.</p>
+          <p class="eco-desc">El core fundacional de Rocketbot. Control sobre DOM y elementos de escritorio. La unica forma de automatizar sistemas sin API.</p>
+          <div class="eco-feats"><div class="eco-feat"><span class="eco-bullet"></span>AS/400 + SAP GUI</div><div class="eco-feat"><span class="eco-bullet"></span>OCR nativo</div><div class="eco-feat"><span class="eco-bullet"></span>Citrix soportado</div></div>
+          <div class="eco-kpi">
+            <div class="eco-kpi-val">50K+</div>
+            <div class="eco-kpi-lbl">bots en produccion</div>
+          </div>
+        </article>
+        
+        <article class="eco-product">
+          <div class="eco-head">
+            <span class="eco-code">03</span>
+            <span class="eco-tag">Inteligencia</span>
+          </div>
+          <div class="eco-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+          <h5 class="eco-name">AI Studio</h5>
+          <p class="eco-hook">Correos, PDFs e imagenes en datos accionables.</p>
+          <p class="eco-desc">Extraccion estructurada con LLMs de frontera. Templates JSON reusables. LLM-agnostico: Claude, GPT, Gemini o privado.</p>
+          <div class="eco-feats"><div class="eco-feat"><span class="eco-bullet"></span>Doc intelligence</div><div class="eco-feat"><span class="eco-bullet"></span>Email parsing</div><div class="eco-feat"><span class="eco-bullet"></span>OCR + Vision</div></div>
+          <div class="eco-kpi">
+            <div class="eco-kpi-val">Multi-LLM</div>
+            <div class="eco-kpi-lbl">Claude · GPT · Gemini</div>
+          </div>
+        </article>
+        
+        <article class="eco-product">
+          <div class="eco-head">
+            <span class="eco-code">04</span>
+            <span class="eco-tag">Gobierno</span>
+          </div>
+          <div class="eco-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1.5"/><circle cx="12" cy="15" r="1.5" fill="currentColor"/><circle cx="16" cy="15" r="1.5"/></svg></div>
+          <h5 class="eco-name">Orquestador</h5>
+          <p class="eco-hook">Coordina, calendariza y monitorea cada agente.</p>
+          <p class="eco-desc">Vista tecnica unificada. Auto-scale, retries y human-in-the-loop. Trazabilidad nativa para auditorias y cumplimiento.</p>
+          <div class="eco-feats"><div class="eco-feat"><span class="eco-bullet"></span>HITL queues</div><div class="eco-feat"><span class="eco-bullet"></span>Auto-scale</div><div class="eco-feat"><span class="eco-bullet"></span>Logs trazables</div></div>
+          <div class="eco-kpi">
+            <div class="eco-kpi-val">99.97%</div>
+            <div class="eco-kpi-lbl">uptime SLA</div>
+          </div>
+        </article>
+        
+        <article class="eco-product">
+          <div class="eco-head">
+            <span class="eco-code">05</span>
+            <span class="eco-tag">Negocio</span>
+          </div>
+          <div class="eco-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/><circle cx="6" cy="6" r=".8" fill="currentColor"/><line x1="12" y1="13" x2="18" y2="13" stroke-width="1.2"/><line x1="12" y1="16" x2="16" y2="16" stroke-width="1.2"/></svg></div>
+          <h5 class="eco-name">Nexus</h5>
+          <p class="eco-hook">Ve donde se gana, donde se pierde, en tiempo real.</p>
+          <p class="eco-desc">App builder low-code conectado a Supabase. Dashboards ejecutivos, control de costos y KPIs de negocio sin tocar BI.</p>
+          <div class="eco-feats"><div class="eco-feat"><span class="eco-bullet"></span>Dashboards ejecutivos</div><div class="eco-feat"><span class="eco-bullet"></span>P&L tracking</div><div class="eco-feat"><span class="eco-bullet"></span>Apps a medida</div></div>
+          <div class="eco-kpi">
+            <div class="eco-kpi-val">Low-code</div>
+            <div class="eco-kpi-lbl">Supabase nativo</div>
+          </div>
+        </article>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Ecosistema</div>
+        <div class="counter">10 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:62.50%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="Comparativa">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Comparativa · honesta</span></div>
+        <h2 class="h2 reveal reveal-1" style="font-size:40px;">"No te vendemos IA. Te vendemos la capacidad de <em>usarla bien</em>."</h2>
+        <div class="cmp-wrap reveal reveal-2">
+          <div class="cmp-head">
+            <div class="cmp-h-crit">CRITERIO</div>
+            <div class="cmp-h-diy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Construir Solo · Claude + Python</div>
+            <div class="cmp-h-rb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Rocketbot Suite</div>
+          </div>
+          
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span>Tiempo a primer agente</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>3-6 meses (equipo senior)</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>2-4 semanas (piloto guiado)</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></span><span>Sistemas legacy / sin API</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>Anthropic Computer Use (preview)</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>RPA Studio nativo en produccion</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9"/><path d="M12 14v7"/><path d="M8 21h8"/></svg></span><span>Despliegue on-premise</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>Solo con modelos open-source</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>Suite completa on-premise</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span>Trazabilidad y auditoria</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>Construccion manual ad-hoc</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>Nativa en Orquestador</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span><span>Observabilidad tecnica</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>LangSmith / Datadog (costo extra)</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>Orquestador incluido</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span>Visibilidad de negocio</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>BI aparte o no se mide</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>Nexus incluido</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></span><span>Continuidad operativa</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>Alta dependencia individual</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>Partners + soporte Rocketbot</strong></div>
+        </div>
+        
+        <div class="cmp-row">
+          <div class="cmp-criterio"><span class="cmp-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span>TCO a 3 anos (Mid)</span></div>
+          <div class="cmp-diy"><span class="cmp-dot">x</span>USD 500K - 700K</div>
+          <div class="cmp-rb"><span class="cmp-check">v</span><strong>USD 75K - 110K</strong></div>
+        </div>
+        
+        </div>
+        <div class="source-strip" style="margin-top:14px;"><div class="source-links"><a href="https://docs.anthropic.com/en/docs/build-with-claude/computer-use" target="_blank" rel="noopener">Anthropic Computer Use</a> · <a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">Anthropic pricing</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Comparativa</div>
+        <div class="counter">11 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:68.75%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Pricing">
+        <div class="watermark" style="left:-50px;bottom:-180px;font-size:580px;color:rgba(255,255,255,.04);">$$</div>
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Planes · suite completa</span></div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;">
+          <div>
+            <h2 class="h2 reveal reveal-1" style="color:#fff;margin:0;">Elige el plan que mejor se adapta a tu empresa</h2>
+            <p class="body reveal reveal-2" style="font-size:17px;margin-top:8px;color:rgba(255,255,255,.78);">Suite completa incluida en todos los planes — sin costos ocultos, sin lock-in, sin sorpresas.</p>
+          </div>
+          <div class="reveal reveal-2" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+            <span style="background:rgba(255,255,255,.08);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;padding:6px 12px;border:1px solid rgba(255,255,255,.15);">RPA STUDIO</span>
+            <span style="background:rgba(255,255,255,.08);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;padding:6px 12px;border:1px solid rgba(255,255,255,.15);">SATURN</span>
+            <span style="background:rgba(255,255,255,.08);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;padding:6px 12px;border:1px solid rgba(255,255,255,.15);">AI STUDIO</span>
+            <span style="background:rgba(255,255,255,.08);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;padding:6px 12px;border:1px solid rgba(255,255,255,.15);">ORQUESTADOR</span>
+            <span style="background:rgba(255,255,255,.08);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;padding:6px 12px;border:1px solid rgba(255,255,255,.15);">NEXUS</span>
+          </div>
+        </div>
+        <div class="pricing-grid-v2 reveal reveal-3">
+        <div class="pricing-card-v2">
+          
+          <div>
+            <div class="pricing-tier">
+              <span class="pricing-tier-num">01</span>
+              <span class="pricing-tier-name">Starter</span>
+            </div>
+            <div class="pricing-target">PyME / piloto</div>
+          </div>
+          <div class="pricing-amount">
+            <span class="pricing-currency">USD</span>
+            <span class="pricing-num">8,000</span>
+            <span class="pricing-period">/ ano</span>
+          </div>
+          <div class="pricing-feats"><div class="pricing-feat strong"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Hasta 5 robots RPA</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Suite completa incluida</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Nexus basico (3 apps)</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Soporte via ticket</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>1 instancia productiva</span></div></div>
+          <div class="pricing-cta">Empezar piloto</div>
+        </div>
+        
+        <div class="pricing-card-v2 featured">
+          <div class="pricing-badge-v2">Mas elegido</div>
+          <div>
+            <div class="pricing-tier">
+              <span class="pricing-tier-num">02</span>
+              <span class="pricing-tier-name">Growth</span>
+            </div>
+            <div class="pricing-target">Mid Enterprise</div>
+          </div>
+          <div class="pricing-amount">
+            <span class="pricing-currency">USD</span>
+            <span class="pricing-num">15,000</span>
+            <span class="pricing-period">/ ano</span>
+          </div>
+          <div class="pricing-feats"><div class="pricing-feat strong"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Hasta 15 robots RPA</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Nexus completo + apps ilimitadas</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Onboarding guiado con CSM</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Gerente de cuenta dedicado</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Soporte prioritario 24/5</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>3 instancias productivas</span></div></div>
+          <div class="pricing-cta">Hablar con ventas</div>
+        </div>
+        
+        <div class="pricing-card-v2">
+          
+          <div>
+            <div class="pricing-tier">
+              <span class="pricing-tier-num">03</span>
+              <span class="pricing-tier-name">Scale</span>
+            </div>
+            <div class="pricing-target">Enterprise / regulado</div>
+          </div>
+          <div class="pricing-amount">
+            <span class="pricing-currency">USD</span>
+            <span class="pricing-num">25,000+</span>
+            <span class="pricing-period">/ ano</span>
+          </div>
+          <div class="pricing-feats"><div class="pricing-feat strong"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Robots ilimitados</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Despliegue on-premise / air-gap</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>SLA garantizado contractual</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Soporte dedicado 24/7</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Precio negociable por volumen</span></div><div class="pricing-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Compliance ISO 27001 / SOC2</span></div></div>
+          <div class="pricing-cta">Solicitar cotizacion</div>
+        </div>
+        </div>
+        <div class="reveal reveal-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px;">
+          <div style="border:1px solid rgba(255,255,255,.1);padding:14px 16px;display:flex;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57E48F" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div><div style="font-size:11px;color:#fff;font-weight:700;">Sin costos ocultos</div><div style="font-size:10px;color:rgba(255,255,255,.55);">Suite completa siempre</div></div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,.1);padding:14px 16px;display:flex;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57E48F" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            <div><div style="font-size:11px;color:#fff;font-weight:700;">Pago anual</div><div style="font-size:10px;color:rgba(255,255,255,.55);">Pesos / dolares / EUR</div></div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,.1);padding:14px 16px;display:flex;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57E48F" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <div><div style="font-size:11px;color:#fff;font-weight:700;">Upgrade en cualquier momento</div><div style="font-size:10px;color:rgba(255,255,255,.55);">Crece sin friccion</div></div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,.1);padding:14px 16px;display:flex;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57E48F" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div><div style="font-size:11px;color:#fff;font-weight:700;">Setup en 2-4 semanas</div><div style="font-size:10px;color:rgba(255,255,255,.55);">Piloto medido</div></div>
+          </div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Pricing</div>
+        <div class="counter">12 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:75.00%"></div></div>
+      </section>
+      <section class="slide theme-paper" data-title="TCO">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Economia · TCO 3 anos</span></div>
+        <h2 class="h2 reveal reveal-1">El costo de <em>no decidir bien</em></h2>
+        <p class="body reveal reveal-2">Comparacion de costo total de propiedad a 3 anos — dos escenarios reales.</p>
+        <div class="tco-wrap reveal reveal-3">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="tco-chart">
+              <div class="tco-group"><div class="tco-label">PyME · 3 anos</div><div class="tco-bars"><div class="tco-bar" style="height:430px;"><span class="val">USD 195K</span></div><div class="tco-bar rb" style="height:90px;"><span class="val">USD 42K</span></div></div><div class="tco-label" style="display:flex;gap:14px;"><span style="color:var(--red);font-weight:700;">DIY</span><span style="color:var(--ink);font-weight:700;">Rocketbot</span></div></div>
+              <div class="tco-group"><div class="tco-label">Mid Enterprise · 3 anos</div><div class="tco-bars"><div class="tco-bar" style="height:480px;"><span class="val">USD 610K</span></div><div class="tco-bar rb" style="height:60px;"><span class="val">USD 74K</span></div></div><div class="tco-label" style="display:flex;gap:14px;"><span style="color:var(--red);font-weight:700;">DIY</span><span style="color:var(--ink);font-weight:700;">Rocketbot</span></div></div>
+            </div>
+            <p style="font-size:11px;line-height:1.5;color:var(--muted);margin-top:12px;text-align:center;"><strong>Composición DIY:</strong> Salarios AI Engineer + Mantenimiento Infra + Tokens (Claude) + Observability Ad-Hoc + Costos ocultos por recambio de personal.<br/><strong>Composición Rocketbot:</strong> Licencia de plataforma completa + Implementación Inicial Guiada.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:20px;">
+            <div class="card flame tight"><span class="num">PyME · ahorro 3Y</span><h4>USD 153.000</h4><p>1 proceso, 1 agente, 1 dev part-time.</p></div>
+            <div class="card flame tight"><span class="num">Mid Enterprise · ahorro 3Y</span><h4>USD 536.000</h4><p>4-6 procesos, 4-8 agentes, 1-2 devs.</p></div>
+            <div class="card accent tight"><p style="font-family:Mulish,sans-serif;font-style:italic;font-size:18px;">Con la planificacion correcta, los costos son predecibles y el ROI es medible.</p></div>
+          </div>
+        </div>
+        <div class="source-strip" style="margin-top:24px;"><div class="source-links"><a href="https://www.rand.org/pubs/research_reports/RRA2680-1.html" target="_blank" rel="noopener">RAND</a> · <a href="https://www.gallup.com/workplace/247391/fixable-problem-costs-businesses-trillion.aspx" target="_blank" rel="noopener">Gallup</a> · <a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">Anthropic pricing</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · TCO</div>
+        <div class="counter">13 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:81.25%"></div></div>
+      </section>
+      <section class="slide theme-paper-alt" data-title="Anexo TCO">
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_origina.png" alt="Rocketbot" /></div><span class="eyebrow">Anexo · desglose TCO</span></div>
+        <h2 class="h2 reveal reveal-1" style="font-size:44px;">Como se calcula el TCO — <em>supuestos abiertos</em></h2>
+        <div style="flex:1;overflow:hidden;margin-top:20px;" class="reveal reveal-2">
+          <div class="premium-table" style="grid-template-columns: 2fr 1fr 1fr 1fr;"><div class="premium-th">Concepto de Gasto</div><div class="premium-th" style="text-align:right;">Construir Solo (Claude + Python)</div><div class="premium-th col-rb" style="text-align:right;">Rocketbot</div><div class="premium-th">Fuente de Datos</div>
+        <div class="premium-cell"><div class="premium-row-title">Senior AI/ML Engineer (loaded)</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>USD 130.000</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val"><strong>—</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Glassdoor LATAM 2025</div></div>
+        
+        <div class="premium-cell"><div class="premium-row-title">AI Engineer mid (0.5 FTE)</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>USD 39.000</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val"><strong>—</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Bairesdev rates</div></div>
+        
+        <div class="premium-cell"><div class="premium-row-title">API tokens + infra + observability</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>USD 32.000</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val"><strong>—</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Anthropic / Pinecone</div></div>
+        
+        <div class="premium-cell"><div class="premium-row-title">Licencia Rocketbot Growth</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>—</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val ok"><strong>USD 15.000</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Rocketbot</div></div>
+        
+        <div class="premium-cell"><div class="premium-row-title">Implementacion + piloto guiado</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>—</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val ok"><strong>USD 12.000</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Rocketbot</div></div>
+        
+        <div class="premium-cell"><div class="premium-row-title">Reposición de Talento (Turnover estimado)</div></div>
+        <div class="premium-cell" style="text-align:right;"><div class="premium-val"><strong>USD 19.000</strong></div></div>
+        <div class="premium-cell col-rb" style="text-align:right;"><div class="premium-val"><strong>USD 3.000</strong></div></div>
+        <div class="premium-cell"><div class="premium-val" style="font-size:12px;font-family:'JetBrains Mono',monospace;">Calculado al 21% anual</div></div>
+        
+        <div class="premium-cell" style="background:#111827;color:#fff;"><div class="premium-row-title" style="color:#fff;">TOTAL AÑO 1 (MID ENTERPRISE)</div></div>
+        <div class="premium-cell" style="background:#111827;text-align:right;"><div class="premium-val" style="color:#fff;font-size:22px;"><strong>USD 220.000</strong></div></div>
+        <div class="premium-cell col-rb" style="background:var(--red);text-align:right;"><div class="premium-val" style="color:#fff;font-size:22px;"><strong>USD 30.000</strong></div></div>
+        <div class="premium-cell" style="background:#111827;color:#57E48F;"><div class="premium-val" style="color:#57E48F;"><strong>AHORRO Y1: USD 190.000</strong></div></div>
+    </div>
+        </div>
+        <div class="source-strip" style="margin-top:24px;"><div class="source-links"><a href="https://nanda.media.mit.edu/ai_report_2025.pdf" target="_blank" rel="noopener">MIT NANDA</a> · <a href="https://www.rand.org/pubs/research_reports/RRA2680-1.html" target="_blank" rel="noopener">RAND</a> · <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" target="_blank" rel="noopener">McKinsey</a> · <a href="https://www.pinecone.io/pricing/" target="_blank" rel="noopener">Pinecone pricing</a></div></div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Anexo TCO</div>
+        <div class="counter">14 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:87.50%"></div></div>
+      </section>
+      <section class="slide theme-ink dark" data-title="Por que Rocketbot">
+        <div class="watermark" style="right:-80px;bottom:-180px;font-size:720px;">RB</div>
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Credenciales</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;align-items:center;">
+          <div>
+            <h2 class="display-section sm reveal reveal-1" style="font-size:72px;color:#fff;">Por que <em>Rocketbot</em></h2>
+            <span class="ruler white reveal reveal-2"></span>
+            <div class="card glass reveal reveal-3" style="margin-top:32px;padding:32px;">
+              <p style="font-family:Mulish,sans-serif;font-style:italic;font-size:22px;color:rgba(255,255,255,.9);line-height:1.5;">"Procesos que antes tomaban horas, hoy toman minutos. Equipos que antes hacían tareas repetitivas, hoy se enfocan en lo que importa. Un retorno que se mide, no que se promete."</p>
+              <div style="margin-top:24px;display:flex;gap:12px;align-items:center;">
+                 <div style="display:flex;gap:8px;">
+                    <span style="display:inline-flex;padding:4px 12px;background:rgba(255,255,255,.1);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;">ISO 27001</span>
+                    <span style="display:inline-flex;padding:4px 12px;background:rgba(255,255,255,.1);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;">SOC2 Type II</span>
+                    <span style="display:inline-flex;padding:4px 12px;background:rgba(255,255,255,.1);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;">GDPR Ready</span>
+                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="reveal reveal-4">
+             <div style="display:flex;flex-direction:column;gap:20px;">
+                <div class="card outline" style="background:rgba(188,0,23,.05);border-color:rgba(188,0,23,.2);display:flex;align-items:center;gap:24px;padding:24px;">
+                   <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:56px;color:var(--red);line-height:1;">+650</div>
+                   <div><h4 style="font-size:18px;color:#fff;margin:0;">Organizaciones en LATAM</h4><p style="color:rgba(255,255,255,.6);font-size:14px;margin-top:4px;">Banca, retail, salud, gobierno y seguros.</p></div>
+                </div>
+                <div class="card outline" style="background:rgba(255,255,255,.02);display:flex;align-items:center;gap:24px;padding:24px;">
+                   <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:56px;color:#fff;line-height:1;">4.5</div>
+                   <div><h4 style="font-size:18px;color:#fff;margin:0;">Gartner Peer Insights</h4><p style="color:rgba(255,255,255,.6);font-size:14px;margin-top:4px;">Reconocidos como Strong Performer.</p></div>
+                </div>
+                <div class="card outline" style="background:rgba(255,255,255,.02);display:flex;align-items:center;gap:24px;padding:24px;">
+                   <div style="font-family:Mulish,sans-serif;font-weight:900;font-size:56px;color:#fff;line-height:1;">#1</div>
+                   <div><h4 style="font-size:18px;color:#fff;margin:0;">Pioneros Regionales</h4><p style="color:rgba(255,255,255,.6);font-size:14px;margin-top:4px;">Primera plataforma RPA latinoamericana en el cuadrante mágico.</p></div>
+                </div>
+             </div>
+          </div>
+        </div>
+        
+        <div class="footer-brand"><span class="dot"></span> Rocketbot · Por que Rocketbot</div>
+        <div class="counter">15 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:93.75%"></div></div>
+      </section>
+      <section class="slide theme-red dark" data-title="Cierre">
+        <div class="watermark" style="right:-80px;bottom:-180px;font-size:720px;">GO</div>
+        <div class="topbar"><div class="logo-stamp"><img class="logo-img" src="/assets/logo_white.png" alt="Rocketbot" /></div><span class="eyebrow">Cierre · proximo paso</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1400px;">
+          <h2 class="display-section reveal reveal-1" style="font-size:88px;">Las empresas que ganan con IA no son las que entraron primero.<br />Son las que entraron <em>mejor preparadas</em>.</h2>
+          <span class="ruler white tall reveal reveal-2"></span>
+          <div class="reveal reveal-3" style="margin-top:24px;">
+            <div class="cta-step"><div class="cta-num">1</div><div><h4 style="font-family:Mulish,sans-serif;font-weight:800;font-size:24px;color:#fff;">Diagnostico gratuito (30 min)</h4><p style="color:rgba(255,255,255,.78);font-size:18px;">Identificamos que proceso genera mas valor si se automatiza.</p></div></div>
+            <div class="cta-step"><div class="cta-num">2</div><div><h4 style="font-family:Mulish,sans-serif;font-weight:800;font-size:24px;color:#fff;">Piloto medido en 2-4 semanas</h4><p style="color:rgba(255,255,255,.78);font-size:18px;">Proceso real con metricas desde el dia uno.</p></div></div>
+            <div class="cta-step" style="border:none;"><div class="cta-num">3</div><div><h4 style="font-family:Mulish,sans-serif;font-weight:800;font-size:24px;color:#fff;">Escala a tu ritmo</h4><p style="color:rgba(255,255,255,.78);font-size:18px;">Sin sorpresas, sin lock-in tecnico, sin recontratacion.</p></div></div>
+          </div>
+          <p class="reveal reveal-4" style="margin-top:36px;font-family:Mulish,sans-serif;font-style:italic;font-weight:300;font-size:28px;opacity:.82;">Automatiza de forma inteligente. Sin sorpresas, ni letra chica.</p>
+          <p style="margin-top:18px;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.65);">rocketbot.com · contacto@rocketbot.com · +56 2 2938 4700</p>
+        </div>
+        <div class="counter" style="color:rgba(255,255,255,.85);">16 / 16</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </section>
+    </div>
+  </div>
+  <div class="help">Flechas · Espacio · Click · Shift+Flecha anterior · Ctrl+P PDF</div>
+
+  <script>
+    (function () {
+      var deck = document.getElementById("deck");
+      var stage = document.getElementById("stage");
+      var slides = Array.prototype.slice.call(deck.querySelectorAll(".slide"));
+      var current = 0;
+      var total = slides.length;
+      function scaleDeck() {
+        var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) * 0.96;
+        deck.style.transform = "scale(" + scale + ")";
+      }
+      function updateProgress(idx) {
+        var pct = ((idx + 1) / total) * 100;
+        slides.forEach(function (slide) {
+          var fill = slide.querySelector(".progress-fill");
+          if (fill) fill.style.width = pct + "%";
+        });
+      }
+      function goTo(idx) {
+        if (idx < 0 || idx >= total) return;
+        slides[current].classList.remove("active");
+        current = idx;
+        slides[current].classList.add("active");
+        updateProgress(current);
+        document.title = "Rocketbot Sales Deck v3 · " + (slides[current].getAttribute("data-title") || "") + " · " + String(current + 1).padStart(2, "0") + "/" + total;
+      }
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
+        else if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp") { e.preventDefault(); prev(); }
+        else if (e.key === "Home") { e.preventDefault(); goTo(0); }
+        else if (e.key === "End") { e.preventDefault(); goTo(total - 1); }
+      });
+      stage.addEventListener("click", function (e) {
+        if (e.clientX > window.innerWidth * 0.65) next();
+        else if (e.clientX < window.innerWidth * 0.35) prev();
+      });
+      window.addEventListener("resize", scaleDeck);
+      scaleDeck();
+      updateProgress(0);
+    })();
+  </script>
+
+</body>
+</html>

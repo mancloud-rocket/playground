@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hub · El playground de Fernando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Mulish:ital,wght@0,300;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/hub.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <div class="brand">
+        <img class="brand-logo" src="/assets/logo_white.png" alt="Rocketbot" />
+      </div>
+      <button class="logout" id="logout-btn" type="button">Salir</button>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Hub de presentaciones</div>
+      <h1>El playground de <em>Fernando</em></h1>
+      <p>Selecciona una presentacion para abrirla en pantalla completa. Usa flechas, espacio o click para navegar entre slides.</p>
+    </section>
+
+    <section class="grid">
+      <a class="card featured" href="/deck/cinematic.html">
+        <div class="card-tag">Recomendado</div>
+        <h2>Sales Deck Cinematic</h2>
+        <p>Version ultra-cinematografica con transiciones GSAP, escenas animadas y experiencia tipo keynote para demos comerciales de alto impacto.</p>
+        <div class="card-meta">
+          <span>16 slides</span>
+          <span>Abrir</span>
+        </div>
+      </a>
+
+      <a class="card" href="/deck/v3.html">
+        <div class="card-tag">Clasico</div>
+        <h2>Sales Deck v3</h2>
+        <p>Presentacion estandar con navegacion por teclado, diseno editorial Rocketbot y contenido completo de la defensa comercial anti-DIY.</p>
+        <div class="card-meta">
+          <span>16 slides</span>
+          <span>Abrir</span>
+        </div>
+      </a>
+    </section>
+
+    <footer class="foot">Rocketbot · Material confidencial · Uso interno</footer>
+  </main>
+  <script src="/js/hub.js"></script>
+</body>
+</html>

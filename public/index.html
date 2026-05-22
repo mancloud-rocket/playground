@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>El playground de Fernando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Mulish:ital,wght@0,300;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/login.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="shell">
+      <div class="hero-panel">
+        <div>
+          <div class="brand">
+            <img class="brand-logo" src="/assets/logo_white.png" alt="Rocketbot" />
+          </div>
+          <div class="eyebrow">Acceso privado</div>
+          <h1 class="hero-title">El playground de <em>Fernando</em></h1>
+          <p class="hero-copy">Presentaciones comerciales, demos interactivas y material estrategico de Rocketbot. Solo para uso interno.</p>
+          <div class="hero-rail"></div>
+        </div>
+        <div class="hero-foot">Rocketbot AI Product · 2026</div>
+      </div>
+
+      <div class="login-panel">
+        <h2>Iniciar sesion</h2>
+        <p>Ingresa tus credenciales para acceder al hub de presentaciones.</p>
+
+        <form id="login-form" autocomplete="on">
+          <input type="hidden" id="next" name="next" value="/hub" />
+
+          <div class="field">
+            <label for="username">Usuario</label>
+            <input id="username" name="username" type="text" autocomplete="username" required />
+          </div>
+
+          <div class="field">
+            <label for="password">Contrasena</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+
+          <button class="btn" id="login-btn" type="submit">Entrar al playground</button>
+          <div class="error" id="login-error"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="/js/login.js"></script>
+</body>
+</html>

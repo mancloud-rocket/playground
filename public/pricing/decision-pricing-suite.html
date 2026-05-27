@@ -58,19 +58,6 @@
         linear-gradient(220deg, rgba(0, 212, 255, 0.03) 0%, transparent 38%);
     }
 
-    .brand-corner {
-      position: fixed;
-      top: 24px;
-      left: 24px;
-      z-index: 200;
-      line-height: 0;
-    }
-    .brand-corner img {
-      display: block;
-      height: 24px;
-      width: auto;
-    }
-
     .shell {
       display: grid;
       grid-template-columns: 240px minmax(0, 760px) 1fr;
@@ -150,12 +137,16 @@
 
     .view-all-wrap {
       display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
       margin-top: 56px;
       padding-top: 32px;
       border-top: 1px solid var(--rb-border);
       text-align: center;
     }
-    body.focus-mode .view-all-wrap { display: block; }
+    body.focus-mode .view-all-wrap { display: flex; }
+    .chapter-nav-btn,
     .view-all-btn {
       font-family: var(--font);
       font-size: 0.82rem;
@@ -163,12 +154,21 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       padding: 14px 32px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .chapter-nav-btn {
+      background: var(--rb-white);
+      color: var(--rb-red);
+      border: 2px solid var(--rb-red);
+    }
+    .chapter-nav-btn:hover { background: rgba(188, 0, 23, 0.06); }
+    .chapter-nav-btn[hidden] { display: none; }
+    .view-all-btn {
       background: var(--rb-ink);
       color: var(--rb-white);
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
     }
     .view-all-btn:hover { background: var(--rb-red); }
 
@@ -1130,9 +1130,7 @@
     .footer a { color: var(--rb-red); text-decoration: none; border-bottom: 1px solid var(--rb-border); font-weight: 600; }
 
     @media (max-width: 1024px) {
-      .brand-corner { top: 16px; left: 16px; }
-      .brand-corner img { height: 20px; }
-      .shell { grid-template-columns: 1fr; gap: 0; padding: 0 22px; padding-top: 52px; }
+      .shell { grid-template-columns: 1fr; gap: 0; padding: 0 22px; }
       aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); padding: 36px 20px 28px; overflow-y: visible; }
       aside nav { display: flex; flex-wrap: wrap; gap: 8px 18px; padding-right: 0; }
       aside a { padding: 4px 0; }
@@ -1146,9 +1144,6 @@
   </style>
 </head>
 <body>
-  <a class="brand-corner" href="#decision" aria-label="Rocketbot">
-    <img src="/assets/logo_origina.png" alt="Rocketbot" width="100" height="24" />
-  </a>
   <div class="shell">
     <aside>
       <div class="mark">Decisión · Pricing Suite</div>
@@ -1780,6 +1775,7 @@
       </section>
 
       <div class="view-all-wrap" id="view-all-wrap" hidden>
+        <button type="button" class="chapter-nav-btn" id="next-chapter-btn">Siguiente</button>
         <button type="button" class="view-all-btn" id="view-all-btn">Ver todo el análisis</button>
       </div>
 
@@ -1791,10 +1787,16 @@
     const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
     const viewAllWrap = document.getElementById('view-all-wrap');
     const viewAllBtn = document.getElementById('view-all-btn');
-    const brandCorner = document.querySelector('.brand-corner');
+    const nextChapterBtn = document.getElementById('next-chapter-btn');
+    const sectionIds = [...links].map(l => l.getAttribute('href').slice(1));
 
     function setActiveLink(id) {
       links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+    }
+
+    function updateNextButton(sectionId) {
+      const idx = sectionIds.indexOf(sectionId);
+      nextChapterBtn.hidden = idx < 0 || idx >= sectionIds.length - 1;
     }
 
     function enterFocusMode(sectionId) {
@@ -1804,6 +1806,7 @@
       });
       viewAllWrap.hidden = false;
       setActiveLink(sectionId);
+      updateNextButton(sectionId);
       window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
       history.replaceState({ focus: sectionId }, '', '#' + sectionId);
     }
@@ -1826,10 +1829,12 @@
 
     viewAllBtn.addEventListener('click', exitFocusMode);
 
-    brandCorner.addEventListener('click', e => {
-      if (document.body.classList.contains('focus-mode')) {
-        e.preventDefault();
-        enterFocusMode('decision');
+    nextChapterBtn.addEventListener('click', () => {
+      const current = sections.find(s => s && !s.hidden);
+      if (!current) return;
+      const idx = sectionIds.indexOf(current.id);
+      if (idx >= 0 && idx < sectionIds.length - 1) {
+        enterFocusMode(sectionIds[idx + 1]);
       }
     });
 

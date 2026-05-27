@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anexo técnico · Pricing Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rb-red: #BC0017;
+      --rb-ink: #263238;
+      --rb-muted: #607D8B;
+      --rb-bg: #FAFAFA;
+      --rb-white: #FFFFFF;
+      --rb-surface-alt: #F4F6F8;
+      --rb-border: rgba(38, 50, 56, 0.1);
+      --font: 'Montserrat', system-ui, sans-serif;
+      --red: var(--rb-red);
+      --deep: var(--rb-ink);
+      --ink: var(--rb-ink);
+      --muted: var(--rb-muted);
+      --paper: var(--rb-bg);
+      --card: var(--rb-white);
+      --line: rgba(38, 50, 56, 0.14);
+      --line-soft: var(--rb-border);
+      --display: var(--font);
+      --body: var(--font);
+      --mono: ui-monospace, 'Cascadia Code', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--rb-ink);
+      background: var(--rb-bg);
+      background-image: linear-gradient(165deg, rgba(188, 0, 23, 0.03) 0%, transparent 40%);
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 56px 32px 96px; }
+
+    header.top {
+      border-bottom: 2px solid var(--rb-ink);
+      padding-bottom: 18px;
+      margin-bottom: 36px;
+    }
+    header.top img { height: 26px; margin-bottom: 14px; display: block; }
+    .kicker {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--rb-red);
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-family: var(--font);
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--rb-ink);
+      line-height: 1.08;
+    }
+    .breadcrumb {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .breadcrumb a { color: var(--red); text-decoration: none; border-bottom: 1px solid var(--line); }
+
+    h2 {
+      font-family: var(--font);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--rb-ink);
+      letter-spacing: -0.02em;
+      margin: 40px 0 12px;
+    }
+    h3 {
+      font-family: var(--font);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--rb-ink);
+      margin: 24px 0 8px;
+    }
+    p { margin-bottom: 12px; max-width: 70ch; }
+
+    .formula {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      background: var(--card);
+      border-left: 3px solid var(--red);
+      padding: 14px 18px;
+      margin: 12px 0;
+      color: var(--deep);
+      overflow-x: auto;
+    }
+    .formula .var { color: var(--red); font-weight: 700; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      margin: 14px 0;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    th {
+      background: var(--rb-ink);
+      color: var(--rb-white);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.h td { background: var(--card); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--deep); }
+
+    .note {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      margin: 14px 0;
+      color: var(--muted);
+    }
+
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--card); padding: 1px 6px; border-radius: 2px; color: var(--deep); }
+    ul { margin: 8px 0 14px 24px; }
+    ul li { margin-bottom: 4px; }
+
+    footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.72rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="top">
+      <img src="/assets/logo_origina.png" alt="Rocketbot" width="130" height="30" />
+      <div class="kicker">Anexo técnico · Soporte de la decisión</div>
+      <h1>Fórmulas, sensibilidades y fuentes</h1>
+      <div class="breadcrumb">← <a href="/pricing/decision-pricing-suite.html">Documento de decision</a> · Mayo 2026</div>
+    </header>
+
+    <h2>1. Definiciones operativas</h2>
+    <table>
+      <tbody>
+        <tr><td><strong>Proceso</strong></td><td>Automatización registrada y desplegada en el orquestador. Unidad de licencia.</td></tr>
+        <tr><td><strong>Ejecución</strong></td><td>Corrida individual del proceso. No es unidad de cobro.</td></tr>
+        <tr><td><strong>Capacidad del tier</strong></td><td>Procesos simultáneos máximos en producción.</td></tr>
+        <tr><td><strong>Capacidad llena</strong></td><td>El cliente tiene en producción el total de procesos incluidos en su tier (5, 20, 50 o 100).</td></tr>
+        <tr><td><strong>TCO Y1</strong></td><td>Total cost of ownership año 1 = licencia + Sprint Discovery + implementación inicial + capacitación.</td></tr>
+        <tr><td><strong>TCO Y2+</strong></td><td>Año 2 en adelante = licencia (+ Managed Operations si se contrata, Fase 2).</td></tr>
+        <tr><td><strong>Valor de referencia</strong></td><td>USD 16.000 por proceso por año. Base LATAM mid-market, desglosada en labor + calidad + gobierno.</td></tr>
+        <tr><td><strong>PTV</strong></td><td>Price-to-value: licencia (o TCO) sobre valor económico. Captura de valor del proveedor.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. Fórmulas centrales</h2>
+
+    <h3>Valor económico por proceso</h3>
+    <div class="formula">
+      <span class="var">Valor_proceso</span> = horas_liberadas × (USD_labor + USD_calidad + USD_gobierno) / h<br />
+      <span class="var">Valor_referencia</span> = 800 × (12 + 4 + 4) = USD 16.000 / año
+    </div>
+
+    <h3>TCO del cliente</h3>
+    <div class="formula">
+      <span class="var">TCO_Y1</span> = licencia + discovery + (procesos_iniciales × USD_por_proceso) + capacitación<br />
+      <span class="var">TCO_Y2+</span> = licencia + (managed_mensual × 12 si aplica)
+    </div>
+
+    <h3>ROI del cliente</h3>
+    <div class="formula">
+      <span class="var">ROI</span> = (N_procesos × Valor_proceso − TCO) / TCO
+    </div>
+
+    <h3>Captura de valor del proveedor (PTV)</h3>
+    <div class="formula">
+      <span class="var">PTV</span> = TCO_proveedor / (N_procesos × Valor_proceso)
+    </div>
+
+    <h3>Economía Rocketbot</h3>
+    <div class="formula">
+      <span class="var">Revenue_Y1</span> = lic × (1 − canal) + discovery + implementación + capacitación<br />
+      <span class="var">Margin_Y1</span> = rev_lic_neto × GM_lic + rev_servicios × GM_servicios<br />
+      <span class="var">COGS_créditos</span> = créditos_M × USD 8
+    </div>
+    <ul>
+      <li>Canal aplica solo sobre licencia: 20% (Standard/Listed) o 30% (Strategic).</li>
+      <li>Discovery, implementación, capacitación y managed los factura Rocketbot directo, sin canal.</li>
+      <li>Las tablas del documento usan canal 20% promedio.</li>
+    </ul>
+
+    <h2>3. Parámetros usados</h2>
+    <table>
+      <thead>
+        <tr><th>Parámetro</th><th class="num">Valor</th><th>Fuente / supuesto</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Valor por proceso (labor)</td><td class="num">USD 12/h × 800h = 9.600</td><td>Salario cargado LATAM administrativo</td></tr>
+        <tr><td>Valor por proceso (calidad)</td><td class="num">USD 4/h × 800h = 3.200</td><td>Reducción de errores, retrabajo, multas evitadas</td></tr>
+        <tr><td>Valor por proceso (gobierno)</td><td class="num">USD 4/h × 800h = 3.200</td><td>Monitoreo, reporting, compliance, auditoría</td></tr>
+        <tr><td><strong>Total referencia</strong></td><td class="num"><strong>USD 16.000 / proceso / año</strong></td><td>Suma de los tres ejes</td></tr>
+        <tr><td>Costo crédito IA Rocketbot</td><td class="num">USD 8 / millón</td><td>Acordado en dirección</td></tr>
+        <tr><td>Implementación piso por proceso (medium)</td><td class="num">USD 6.000</td><td>90h × USD 65/h blended desarrollo senior + QA</td></tr>
+        <tr><td>Implementación Entry (lighter pilot)</td><td class="num">USD 4.000</td><td>Procesos simples, scope reducido, learning</td></tr>
+        <tr><td>Sprint Discovery (fijo)</td><td class="num">USD 5.000</td><td>2 semanas Sr. consultor + arquitectura</td></tr>
+        <tr><td>Margen partner Strategic</td><td class="num">30%</td><td>Política canal vigente</td></tr>
+        <tr><td>Margen partner Standard / Listed</td><td class="num">20%</td><td>Política canal vigente</td></tr>
+        <tr><td>GM licencia Suite</td><td class="num">90%</td><td>Saturn + créditos + soporte ligero incluido</td></tr>
+        <tr><td>GM implementación</td><td class="num">40%</td><td>Talento dev LATAM cargado</td></tr>
+        <tr><td>GM capacitación</td><td class="num">60%</td><td>Material reutilizable</td></tr>
+        <tr><td>GM Managed Operations (Fase 2)</td><td class="num">45%</td><td>FTE parcial + recurrente</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. Implementación por tier (composición TCO Y1)</h2>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th class="num">Licencia</th><th class="num">Discovery</th><th class="num">Proc iniciales</th><th class="num">USD/proc</th><th class="num">Total Impl.</th><th class="num">Capacitación</th><th class="num">TCO Y1</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Entry</td><td class="num">5.000</td><td class="num">2.000</td><td class="num">3</td><td class="num">4.000</td><td class="num">12.000</td><td class="num">2.000</td><td class="num">21.000</td></tr>
+        <tr><td>Standard</td><td class="num">15.000</td><td class="num">5.000</td><td class="num">6</td><td class="num">6.000</td><td class="num">36.000</td><td class="num">3.000</td><td class="num">59.000</td></tr>
+        <tr><td>Enterprise</td><td class="num">30.000</td><td class="num">8.000</td><td class="num">12</td><td class="num">6.000</td><td class="num">72.000</td><td class="num">5.000</td><td class="num">115.000</td></tr>
+        <tr><td>Corporate</td><td class="num">50.000</td><td class="num">10.000</td><td class="num">20</td><td class="num">6.000</td><td class="num">120.000</td><td class="num">8.000</td><td class="num">188.000</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. Sensibilidad ROI · matriz</h2>
+    <p>ROI año 1 según procesos desplegados en producción. Valor de referencia USD 16.000.</p>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th class="num">TCO Y1</th><th class="num">3 proc</th><th class="num">6 proc</th><th class="num">10 proc</th><th class="num">20 proc</th><th class="num">50 proc</th><th class="num">100 proc</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Entry · 21k</td><td class="num">21.000</td><td class="num">129%</td><td class="num">357%</td><td class="num">662%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>Standard · 59k</td><td class="num">59.000</td><td class="num">−19%</td><td class="num">63%</td><td class="num">171%</td><td class="num">442%</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>Enterprise · 115k</td><td class="num">115.000</td><td class="num">—</td><td class="num">−16%</td><td class="num">39%</td><td class="num">178%</td><td class="num">596%</td><td class="num">—</td></tr>
+        <tr><td>Corporate · 188k</td><td class="num">188.000</td><td class="num">—</td><td class="num">—</td><td class="num">−15%</td><td class="num">70%</td><td class="num">326%</td><td class="num">751%</td></tr>
+      </tbody>
+    </table>
+
+    <h2>6. Sensibilidad sobre el valor de referencia</h2>
+    <p>ROI año 1 a capacidad llena variando el valor por proceso.</p>
+    <table>
+      <thead>
+        <tr><th>Valor proceso</th><th class="num">Standard 59k</th><th class="num">Enterprise 115k</th><th class="num">Corporate 188k</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>USD 5.600 (mínimo)</td><td class="num">90%</td><td class="num">143%</td><td class="num">198%</td></tr>
+        <tr><td>USD 9.600 (PyME)</td><td class="num">225%</td><td class="num">317%</td><td class="num">410%</td></tr>
+        <tr><td><strong>USD 16.000 (referencia)</strong></td><td class="num"><strong>442%</strong></td><td class="num"><strong>596%</strong></td><td class="num"><strong>751%</strong></td></tr>
+        <tr><td>USD 26.400 (transversal)</td><td class="num">795%</td><td class="num">1.048%</td><td class="num">1.304%</td></tr>
+        <tr><td>USD 46.800 (crítico)</td><td class="num">1.485%</td><td class="num">1.935%</td><td class="num">2.389%</td></tr>
+      </tbody>
+    </table>
+
+    <h2>7. COGS créditos IA vs lista</h2>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th class="num">Créditos incluidos</th><th class="num">COGS USD</th><th class="num">% sobre lista</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Entry</td><td class="num">3M</td><td class="num">24</td><td class="num">0,5%</td></tr>
+        <tr><td>Standard</td><td class="num">20M</td><td class="num">160</td><td class="num">1,1%</td></tr>
+        <tr><td>Enterprise</td><td class="num">80M</td><td class="num">640</td><td class="num">2,1%</td></tr>
+        <tr><td>Corporate</td><td class="num">160M</td><td class="num">1.280</td><td class="num">2,6%</td></tr>
+      </tbody>
+    </table>
+    <p>Add-on overage: USD 15 a 23 / millón según tier. Margen sobre overage: 47–65%.</p>
+
+    <h2>8. Breakeven del TCO Y1</h2>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th class="num">TCO Y1</th><th class="num">Procesos para breakeven</th><th>Lectura</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Entry</td><td class="num">21.000</td><td class="num">1,3</td><td>Breakeven con 2 procesos en producción</td></tr>
+        <tr><td>Standard</td><td class="num">59.000</td><td class="num">3,7</td><td>4 procesos cubren el TCO del año 1</td></tr>
+        <tr><td>Enterprise</td><td class="num">115.000</td><td class="num">7,2</td><td>Requiere plan firmado de 8+ procesos en año 1</td></tr>
+        <tr><td>Corporate</td><td class="num">188.000</td><td class="num">11,8</td><td>Requiere plan firmado de 12+ procesos en año 1</td></tr>
+      </tbody>
+    </table>
+
+    <h2>9. ROI 3 años acumulado (rampa hasta capacidad llena)</h2>
+    <p>Supuesto de rampa: Entry 3→5→5 / Standard 8→14→20 / Enterprise 18→35→50 / Corporate 35→70→100 procesos en años 1-2-3.</p>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th class="num">TCO 3 años</th><th class="num">Valor 3 años</th><th class="num">ROI 3 años</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Entry</td><td class="num">31.000</td><td class="num">208.000</td><td class="num">571%</td></tr>
+        <tr><td>Standard</td><td class="num">89.000</td><td class="num">672.000</td><td class="num">655%</td></tr>
+        <tr><td>Enterprise</td><td class="num">175.000</td><td class="num">1.648.000</td><td class="num">842%</td></tr>
+        <tr><td>Corporate</td><td class="num">288.000</td><td class="num">3.280.000</td><td class="num">1.039%</td></tr>
+      </tbody>
+    </table>
+
+    <h2>10. LTV cliente Rocketbot · land &amp; expand</h2>
+    <p>Cuenta nueva con disciplina de upgrade trianual: Entry → Standard → Enterprise → Corporate.</p>
+    <table>
+      <thead>
+        <tr><th>Fase / año</th><th class="num">Licencia</th><th class="num">Servicios año</th><th class="num">Revenue total</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Año 1 · Entry</td><td class="num">5.000</td><td class="num">16.000</td><td class="num">21.000</td></tr>
+        <tr><td>Año 2 · Standard</td><td class="num">15.000</td><td class="num">44.000</td><td class="num">59.000</td></tr>
+        <tr><td>Año 3 · Standard expandido</td><td class="num">15.000</td><td class="num">0</td><td class="num">15.000</td></tr>
+        <tr><td>Año 4 · Enterprise + Managed Light</td><td class="num">30.000</td><td class="num">103.000</td><td class="num">133.000</td></tr>
+        <tr><td>Año 5 · Enterprise steady + Managed</td><td class="num">30.000</td><td class="num">18.000</td><td class="num">48.000</td></tr>
+        <tr style="background:var(--paper);font-weight:700;"><td><strong>LTV 5 años</strong></td><td class="num"><strong>95.000</strong></td><td class="num"><strong>181.000</strong></td><td class="num"><strong>276.000</strong></td></tr>
+      </tbody>
+    </table>
+    <p>Después de canal 20% sobre licencia: LTV neto Rocketbot ~USD 257.000 por cuenta a 5 años con disciplina de upgrade. Sin Managed Operations recurrente: ~USD 221.000.</p>
+
+    <h2>11. Comparativa competitiva (estimaciones públicas)</h2>
+    <table>
+      <thead>
+        <tr><th>Proveedor</th><th>Configuración</th><th class="num">TCO Y1 USD</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rocketbot Suite</td><td>Standard · 20 procesos · suite completa</td><td class="num">59.000</td></tr>
+        <tr><td>UiPath equivalente bajo</td><td>Studio Pro + Orchestrator + Bots ~20 + impl partner</td><td class="num">90.000</td></tr>
+        <tr><td>UiPath equivalente alto</td><td>Idem + AI Center + Document Understanding</td><td class="num">150.000</td></tr>
+        <tr><td>Automation Anywhere Cloud</td><td>Bot Insight + Control Room + bots</td><td class="num">75.000–110.000</td></tr>
+        <tr><td>DIY agéntico (Claude + dev)</td><td>6 procesos · 1 senior + mid + tokens + infra</td><td class="num">220.000</td></tr>
+      </tbody>
+    </table>
+
+    <h2>12. Plan de migración legacy · métrica detallada</h2>
+    <table>
+      <thead>
+        <tr><th>Métrica</th><th class="num">Target 12m</th><th>Lógica</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>% base migrada a Suite</td><td class="num">≥ 70%</td><td>Renovaciones naturales + sweeteners</td></tr>
+        <tr><td>ARPU promedio post-migración</td><td class="num">USD 5.200</td><td>vs 3.500 base actual (+49%)</td></tr>
+        <tr><td>Churn neto en período</td><td class="num">≤ 8%</td><td>vs 15% baseline, mejor por valor agregado real</td></tr>
+        <tr><td>Costo total sweeteners</td><td class="num">≤ USD 250.000</td><td>3 meses bonificados + 1 proceso gratis + capacitación</td></tr>
+        <tr><td>Payback sweeteners</td><td class="num">6 meses</td><td>Uplift ARR compensa costo</td></tr>
+        <tr><td>Cuentas que rechazan migración</td><td class="num">≤ 15%</td><td>Salida ordenada o precio legacy congelado hasta vencimiento</td></tr>
+      </tbody>
+    </table>
+
+    <h2>13. Hipótesis fuera de scope</h2>
+    <ul>
+      <li><strong>Rocketbot Voice / Digital Worker as a Service</strong>: pricing por outcome (USD 0,22/minuto en caso Oriencoop). Línea de negocio separada con matriz propia.</li>
+      <li><strong>Managed Operations Fase 2</strong>: lanzar cuando haya FTE dedicado y 5+ Enterprise activos comprometidos.</li>
+      <li><strong>Custom Development</strong> avanzado (no procesos estándar): T&amp;M o fijo según project, fuera del pricing Suite.</li>
+      <li><strong>Marketplace / Templates</strong>: revenue share futuro, no modelado en este documento.</li>
+    </ul>
+
+    <h2>14. Reproducibilidad</h2>
+    <ul>
+      <li>Simulación numérica v2: <code>scripts/sim_pricing_v2.py</code></li>
+      <li>Matriz de capacidades fuente: <code>RFMSimulador Suite.xlsx</code>, hoja <code>Nuevasuite</code></li>
+      <li>Para cambiar parámetros, editar las constantes al inicio del script y re-ejecutar.</li>
+    </ul>
+
+    <footer>
+      Documento de soporte técnico para la decisión de pricing Suite. Mayo 2026. No es comunicación a clientes ni a partners.
+    </footer>
+  </div>
+</body>
+</html>

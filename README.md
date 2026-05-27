@@ -8,6 +8,8 @@ Host para las presentaciones comerciales de Rocketbot con login previo.
 - `/hub` — Hub con links a los decks (requiere sesion)
 - `/deck/v3.html` — Sales Deck v3
 - `/deck/cinematic.html` — Sales Deck cinematic
+- `/pricing/decision-pricing-suite.html` — Decision de pricing Suite (CEO)
+- `/pricing/decision-pricing-suite-anexo.html` — Anexo tecnico de pricing
 
 ## Local
 
@@ -65,7 +67,7 @@ Configura las mismas variables de entorno en el dashboard de Vercel:
 
 - **No commitees `.env`** — las credenciales van solo en variables de entorno del hosting.
 - La sesion usa cookie firmada httpOnly (7 dias).
-- Las rutas `/deck/*` y `/hub` estan protegidas server-side.
+- Las rutas `/deck/*`, `/pricing/*` y `/hub` estan protegidas server-side.
 
 ## Credenciales
 

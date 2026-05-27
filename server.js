@@ -129,6 +129,7 @@ app.use('/css', express.static(path.join(PUBLIC_DIR, 'css')));
 app.use('/js', express.static(path.join(PUBLIC_DIR, 'js')));
 
 app.use('/deck', requireAuth, express.static(path.join(PUBLIC_DIR, 'deck')));
+app.use('/pricing', requireAuth, express.static(path.join(PUBLIC_DIR, 'pricing')));
 
 app.use((req, res) => {
   res.status(404).send('Not found');
